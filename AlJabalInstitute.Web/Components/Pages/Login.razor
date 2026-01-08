@@ -1,0 +1,164 @@
+﻿@page "/"
+@inject AlJabalInstitute.Web.Services.DataServices DataServices
+@inject NavigationManager Nav
+@layout AuthLayout
+
+<div class="register-box">
+
+    <!-- IMAGE -->
+    <div class="media-box">
+        <img src="images/loginpic.gif" alt="" />
+    </div>
+
+    <!-- TITLE -->
+    <h2 class="title">تسجيل الدخول</h2>
+
+    <!-- FULL NAME -->
+    <div class="field">
+        <label>اسم الأستاذ</label>
+        <input placeholder="اكتب اسمك الكامل"
+               maxlength="30"
+               @bind="fullName"
+               disabled="@isLoading" />
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="field">
+        <label>كلمة المرور</label>
+        <input type="password"
+               placeholder="أدخل كلمة المرور"
+               maxlength="30"
+               @bind="password"
+               disabled="@isLoading" />
+    </div>
+
+    <!-- BUTTON -->
+    <button @onclick="DoLogin" disabled="@isLoading">
+        تسجيل الدخول
+    </button>
+
+    <!-- REGISTER LINK -->
+    <div class="login-hint">
+        ليس لديك حساب؟
+        <a href="/Register">حساب جديد</a>
+    </div>
+
+</div>
+
+<!-- ================= LOADING OVERLAY ================= -->
+@if (isLoading)
+{
+    <div class="loading-overlay">
+        <div class="loading-box">
+            <img src="images/wait.gif" alt="loading" />
+            <p>جاري التحقق...</p>
+        </div>
+    </div>
+}
+
+<!-- ================= DIALOG ================= -->
+@if (showDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box @dialogType">
+            <div class="dialog-icon">@dialogIcon</div>
+            <p>@dialogMessage</p>
+            <button @onclick="CloseDialog">حسناً</button>
+        </div>
+    </div>
+}
+
+@code {
+
+    string fullName = string.Empty;
+    string password = string.Empty;
+    const int LoginTimeoutSeconds = 20;
+
+
+    bool isLoading = false;
+
+    bool showDialog = false;
+    string dialogMessage = string.Empty;
+    string dialogType = string.Empty;
+    string dialogIcon = string.Empty;
+
+    async Task DoLogin()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            ShowError("اسم الأستاذ مطلوب");
+            isLoading = false;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            ShowError("كلمة المرور مطلوبة");
+            isLoading = false;
+            return;
+        }
+
+        try
+        {
+            var loginTask = DataServices.LoginAsync(fullName, password);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(LoginTimeoutSeconds));
+
+            var completedTask = await Task.WhenAny(loginTask, timeoutTask);
+
+            // ⛔ انتهى الوقت
+            if (completedTask == timeoutTask)
+            {
+                ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
+                isLoading = false;
+                return;
+            }
+
+            // ✅ نأخذ نتيجة تسجيل الدخول
+            var teacher = await loginTask;
+
+            if (teacher == null)
+            {
+                ShowError("اسم المستخدم أو كلمة المرور غير صحيحة");
+                isLoading = false;
+                return;
+            }
+
+            ShowSuccess("تم تسجيل الدخول بنجاح");
+
+            await Task.Delay(500);
+            Nav.NavigateTo("/Home", true);
+        }
+        catch
+        {
+            ShowError("تعذر الاتصال بالخادم، تحقق من الإنترنت");
+            isLoading = false;
+        }
+    }
+
+
+    void ShowError(string text)
+    {
+        dialogMessage = text;
+        dialogType = "error";
+        dialogIcon = "✖";
+        showDialog = true;
+    }
+
+    void ShowSuccess(string text)
+    {
+        dialogMessage = text;
+        dialogType = "success";
+        dialogIcon = "✔";
+        showDialog = true;
+    }
+
+    void CloseDialog()
+    {
+        showDialog = false;
+        isLoading = false;
+    }
+}
+

@@ -1,7 +1,20 @@
-﻿@page "/"
+﻿@page "/Home"
+@layout MainLayout
 
-<PageTitle>Home</PageTitle>
+@inject AlJabalInstitute.Web.Services.DataServices DataServices
 
-<h1>Hello, world!</h1>
+<div class="home-page">
+    <div class="home-hero">
 
-Welcome to your new app.
+
+
+        <h1 class="home-title">
+            مرحبا أستاد، @DataServices.CurrentTeacher?.FullName
+        </h1>
+
+        <h1 class="home-title">SmartGrades</h1>
+
+        <img class="home-logo" src="images/mainlogo.gif" />
+
+    </div>
+</div>

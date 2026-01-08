@@ -1,0 +1,251 @@
+﻿@page "/SemesterSubjects/{SemesterId:guid}"
+@inject AlJabalInstitute.Web.Services.DataServices DataServices
+@using AlJabalInstitute.Web.Models
+
+<h3>مواد السمستر: @SemesterName</h3>
+
+@if (!IsSemesterActive)
+{
+    <p class="warning-text">
+        هذا السمستر غير نشط، لا يمكن إضافة أو تعديل أو حذف مواد.
+    </p>
+}
+
+<div class="top-action">
+    <button class="add-main-btn"
+            disabled="@(!IsSemesterActive)"
+            @onclick="OpenAddDialog">
+        إضافة مادة جديدة
+    </button>
+</div>
+
+@if (SubjectsInSemester.Count == 0)
+{
+    <p style="text-align:center">لا توجد مواد مضافة لهذا السمستر</p>
+}
+else
+{
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>المادة</th>
+                    <th>السعر</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in SubjectsInSemester)
+                {
+                    <tr class="@(RecentlyAddedSubjectId == subject.Id ? "row-added" : "")">
+                        <td class="subject-cell">
+                            <span class="subject-name" title="@subject.SubjectName">
+                                @subject.SubjectName
+                            </span>
+                        </td>
+                        <td>@subject.LecturePrice.ToString("0.00")</td>
+                        <td class="action-cell">
+                            <button class="edit-btn"
+                                    disabled="@(!IsSemesterActive)"
+                                    @onclick="() => OpenEditDialog(subject)">
+                                تعديل
+                            </button>
+                            <button class="delete-btn"
+                                    disabled="@(!IsSemesterActive)"
+                                    @onclick="() => OpenDeleteDialog(subject)">
+                                حذف
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (ShowAddEditDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+            <h3>@(EditingSubject == null ? "إضافة مادة جديدة" : "تعديل المادة")</h3>
+
+            <label>اسم المادة</label>
+            <input type="text" maxlength="30" @bind="DialogName" />
+
+            <label>السعر</label>
+            <input type="number" @bind="DialogPrice" />
+
+            <button class="dialog-primary" @onclick="ConfirmAddOrEdit">حفظ</button>
+            <button class="dialog-secondary" @onclick="CloseDialog">إلغاء</button>
+        </div>
+    </div>
+}
+
+@if (ShowDeleteDialog && SubjectToDelete != null)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box dialog-danger">
+            <h3>تأكيد الحذف</h3>
+            <p>هل أنت متأكد من حذف <b>@SubjectToDelete.SubjectName</b>؟</p>
+
+            <button class="delete-btn" @onclick="ConfirmDelete">نعم، حذف</button>
+            <button class="dialog-secondary" @onclick="CloseDeleteDialog">إلغاء</button>
+        </div>
+    </div>
+}
+
+@if (ShowErrorDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box dialog-danger">
+            <h3>تنبيه</h3>
+            <p>@ErrorMessage</p>
+            <button class="dialog-primary" @onclick="CloseErrorDialog">موافق</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid SemesterId { get; set; }
+
+    string SemesterName = "";
+    bool IsSemesterActive = true;
+
+    List<Subjects> SubjectsInSemester = new();
+
+    bool ShowAddEditDialog;
+    bool ShowDeleteDialog;
+    bool ShowErrorDialog;
+
+    Subjects? EditingSubject;
+    Subjects? SubjectToDelete;
+
+    string DialogName = "";
+    decimal DialogPrice = 30;
+
+    string ErrorMessage = "";
+    Guid? RecentlyAddedSubjectId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var semesters = await DataServices.GetSemestersAsync();
+        var semester = semesters.FirstOrDefault(s => s.Id == SemesterId);
+        if (semester == null) return;
+
+        SemesterName = semester.SemesterName;
+        IsSemesterActive = !semester.IsFinished;
+
+        SubjectsInSemester =
+            await DataServices.GetSubjectsBySemesterAsync(SemesterId);
+    }
+
+    void OpenAddDialog()
+    {
+        EditingSubject = null;
+        DialogName = "";
+        DialogPrice = 30;
+        ShowAddEditDialog = true;
+    }
+
+    void OpenEditDialog(Subjects subject)
+    {
+        EditingSubject = subject;
+        DialogName = subject.SubjectName;
+        DialogPrice = subject.LecturePrice;
+        ShowAddEditDialog = true;
+    }
+
+    async Task ConfirmAddOrEdit()
+    {
+        var name = DialogName.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            ShowError("اسم المادة مطلوب");
+            return;
+        }
+
+        if (DialogPrice <= 0)
+        {
+            ShowError("السعر غير صالح");
+            return;
+        }
+
+        if (EditingSubject == null &&
+            SubjectsInSemester.Any(s => s.SubjectName == name))
+        {
+            ShowError("المادة مضافة مسبقًا لهذا السمستر");
+            return;
+        }
+
+        Subjects subject;
+
+        if (EditingSubject == null)
+        {
+            subject = await DataServices.CreateSubjectAsync(name);
+            await DataServices.AddSubjectToSemesterAsync(SemesterId, subject.Id);
+            RecentlyAddedSubjectId = subject.Id;
+
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                RecentlyAddedSubjectId = null;
+                await InvokeAsync(StateHasChanged);
+            });
+        }
+        else
+        {
+            subject = EditingSubject;
+        }
+
+        subject.SubjectName = name;
+        subject.LecturePrice = DialogPrice;
+
+        await DataServices.UpdateSubjectAsync(subject);
+
+        SubjectsInSemester =
+            await DataServices.GetSubjectsBySemesterAsync(SemesterId);
+
+        CloseDialog();
+    }
+
+    void CloseDialog()
+    {
+        ShowAddEditDialog = false;
+        EditingSubject = null;
+    }
+
+    void OpenDeleteDialog(Subjects subject)
+    {
+        SubjectToDelete = subject;
+        ShowDeleteDialog = true;
+    }
+
+    async Task ConfirmDelete()
+    {
+        await DataServices.RemoveSubjectFromSemesterAsync(
+            SemesterId, SubjectToDelete!.Id);
+
+        SubjectsInSemester =
+            await DataServices.GetSubjectsBySemesterAsync(SemesterId);
+
+        CloseDeleteDialog();
+    }
+
+    void CloseDeleteDialog()
+    {
+        ShowDeleteDialog = false;
+        SubjectToDelete = null;
+    }
+
+    void ShowError(string msg)
+    {
+        ErrorMessage = msg;
+        ShowErrorDialog = true;
+    }
+
+    void CloseErrorDialog()
+    {
+        ShowErrorDialog = false;
+    }
+}

@@ -1,0 +1,92 @@
+﻿.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(64px + env(safe-area-inset-bottom));
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+    z-index: 1000;
+}
+
+/* العنصر */
+.nav-item {
+    position: relative;
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    /* الأيقونة */
+    .nav-item img {
+        width: 24px;
+        height: 24px;
+        margin-top: 6px;
+        z-index: 1;
+        transition: transform 0.2s ease;
+    }
+
+    /* النص */
+    .nav-item span {
+        margin-top: 8px; /* 👈 نزول الكلمة */
+    }
+
+    /* 🔵 الدائرة الزرقاء (للأيقونة فقط) */
+    .nav-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(51, 152, 255, 0.45); /* #3398FF */
+        opacity: 0;
+        transform: scale(0.6);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+
+    /* الحالة النشطة */
+    .nav-item.active {
+        color: #3398FF;
+    }
+
+        .nav-item.active::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-item.active img {
+            transform: scale(1.15);
+        }
+
+    /* ضغط */
+    .nav-item:active img {
+        transform: scale(0.95);
+    }
+
+/* Tablet */
+@media (min-width: 600px) {
+    .bottom-nav {
+        height: 78px;
+    }
+
+    .nav-item {
+        font-size: 13px;
+    }
+
+        .nav-item img {
+            width: 26px;
+            height: 26px;
+        }
+}

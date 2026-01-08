@@ -1,0 +1,202 @@
+﻿/* ================= PAGE ================= */
+.semesters-page {
+    padding: 24px;
+    padding-top: calc(32px + var(--safe-top));
+    background: #f5f6f8;
+    min-height: 100vh;
+    direction: rtl;
+}
+
+/* ================= HEADER ================= */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+    .page-header h2 {
+        font-size: 22px;
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+/* ================= ADD BUTTON ================= */
+.add-btn {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+    color: #fff;
+    border: none;
+    padding: 14px 26px;
+    border-radius: 18px;
+    font-weight: 900;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.45);
+}
+
+    .add-btn:hover {
+        transform: translateY(-2px);
+    }
+
+/* ================= GRID ================= */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+}
+
+/* ================= CARD ================= */
+.semester-card {
+    position: relative;
+    padding: 72px 24px 24px;
+    border-radius: 26px;
+    color: #fff;
+    background: linear-gradient(160deg, #0b1220, #020617);
+    box-shadow: 0 40px 60px rgba(0,0,0,0.45);
+    overflow: hidden;
+}
+
+
+.card-header,
+.card-body,
+.card-actions,
+.details-link {
+    position: relative;
+    z-index: 1;
+}
+
+/* ================= HEADER ================= */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.semester-name {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+/* ================= STATUS ================= */
+.status-badge {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+    .status-badge.active {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    .status-badge.inactive {
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+    }
+
+/* ================= BODY ================= */
+.card-body {
+    margin-top: 10px;
+}
+
+.date {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.card-actions {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+}
+
+.edit-btn,
+.toggle-btn,
+.delete-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 16px;
+    border: none;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #fff;
+}
+
+.toggle-btn {
+    background: #e5e7eb;
+    color: #020617;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #fff;
+}
+
+/* ================= DETAILS (رسمي – ورقة) ================= */
+.details-link {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    color: black;
+    font-weight: 800;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+    .details-link:hover {
+        background: #f9fafb;
+        transform: translateY(-1px);
+    }
+
+/* ================= DIALOG ================= */
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.dialog-box {
+    background: #fff;
+    border-radius: 22px;
+    padding: 24px;
+    width: 92%;
+    max-width: 420px;
+}
+
+/* ================= RTL ================= */
+.rtl-input {
+    direction: rtl;
+    text-align: right;
+}
+
+.error-text {
+    color: #dc2626;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+
+    .semester-card {
+        padding: 64px 18px 22px;
+    }
+
+    .semester-name {
+        font-size: 16px;
+    }
+}

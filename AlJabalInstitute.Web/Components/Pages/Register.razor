@@ -1,0 +1,187 @@
+﻿@page "/Register"
+@layout AuthLayout
+@inject AlJabalInstitute.Web.Services.DataServices DataServices
+@inject NavigationManager Nav
+
+<div class="register-box">
+
+    <!-- LOGO -->
+    <div class="media-box">
+        <img src="images/logo.gif" alt="SmartGrades Logo" />
+    </div>
+
+    <!-- TITLE -->
+    <h2 class="title">عمل حساب جديد</h2>
+
+    <!-- FIELDS AREA -->
+    <div class="fields-area">
+
+        <div class="field">
+            <label>اسم الأستاذ</label>
+            <input placeholder="اكتب اسمك الكامل"
+                   maxlength="30"
+                   @bind="fullName"
+                   disabled="@isLoading" />
+        </div>
+
+        <div class="field">
+            <label>كلمة المرور</label>
+            <input type="password"
+                   placeholder="أدخل كلمة المرور"
+                   maxlength="30"
+                   @bind="password"
+                   disabled="@isLoading" />
+        </div>
+
+        <div class="field">
+            <label>تأكيد كلمة المرور</label>
+            <input type="password"
+                   placeholder="أعد إدخال كلمة المرور"
+                   maxlength="30"
+                   @bind="confirmPassword"
+                   disabled="@isLoading" />
+        </div>
+
+    </div>
+
+    <!-- BUTTON -->
+    <button @onclick="CreateAccount" disabled="@isLoading">
+        عمل حساب
+    </button>
+
+    <!-- LOGIN LINK -->
+    <div class="login-hint">
+        هل تمتلك حساب معنا؟
+        <a href="/">تسجيل الدخول</a>
+    </div>
+
+</div>
+
+<!-- ================= LOADING OVERLAY ================= -->
+@if (isLoading)
+{
+    <div class="loading-overlay">
+        <div class="loading-box">
+            <img src="images/wait.gif" alt="loading" />
+            <p>جاري إنشاء الحساب...</p>
+        </div>
+    </div>
+}
+
+<!-- ================= DIALOG ================= -->
+@if (showDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box @dialogType">
+            <div class="dialog-icon">@dialogIcon</div>
+            <p>@dialogMessage</p>
+            <button @onclick="CloseDialog">حسناً</button>
+        </div>
+    </div>
+}
+
+@code {
+
+    string fullName = string.Empty;
+    string password = string.Empty;
+    string confirmPassword = string.Empty;
+
+    const int RegisterTimeoutSeconds = 20;
+    bool isLoading = false;
+
+    bool showDialog = false;
+    bool redirectAfterClose = false;
+
+    string dialogMessage = string.Empty;
+    string dialogType = string.Empty;
+    string dialogIcon = string.Empty;
+
+    async Task CreateAccount()
+    {
+        if (isLoading) return;
+        isLoading = true;
+
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            ShowError("اسم الأستاذ مطلوب");
+            isLoading = false;
+            return;
+        }
+
+        if (password.Length < 6)
+        {
+            ShowError("كلمة المرور قصيرة");
+            isLoading = false;
+            return;
+        }
+
+        if (password != confirmPassword)
+        {
+            ShowError("كلمتا المرور غير متطابقتين");
+            isLoading = false;
+            return;
+        }
+
+        try
+        {
+            var checkTask = DataServices.TeacherNameExistsAsync(fullName);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(RegisterTimeoutSeconds));
+
+            var completed = await Task.WhenAny(checkTask, timeoutTask);
+
+            if (completed == timeoutTask)
+            {
+                ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
+                isLoading = false;
+                return;
+            }
+
+            if (await checkTask)
+            {
+                ShowError("الاسم مسجّل مسبقًا");
+                isLoading = false;
+                return;
+            }
+
+            await DataServices.CreateTeacherAsync(new AlJabalInstitute.Web.Models.Teacher
+            {
+                FullName = fullName,
+                Password = password
+            });
+
+            ShowSuccess("تم إنشاء الحساب بنجاح");
+            redirectAfterClose = true;
+        }
+        catch
+        {
+            ShowError("تعذر الاتصال بالخادم، تحقق من الإنترنت");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    void ShowError(string text)
+    {
+        dialogMessage = text;
+        dialogType = "error";
+        dialogIcon = "✖";
+        showDialog = true;
+    }
+
+    void ShowSuccess(string text)
+    {
+        dialogMessage = text;
+        dialogType = "success";
+        dialogIcon = "✔";
+        showDialog = true;
+    }
+
+    void CloseDialog()
+    {
+        showDialog = false;
+        if (redirectAfterClose)
+            Nav.NavigateTo("/", true);
+    }
+}
