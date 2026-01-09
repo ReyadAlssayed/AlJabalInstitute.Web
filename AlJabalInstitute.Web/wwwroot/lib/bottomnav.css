@@ -1,4 +1,7 @@
-﻿.bottom-nav {
+﻿/* =========================
+   Bottom Navigation
+========================= */
+.bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -14,7 +17,9 @@
     z-index: 1000;
 }
 
-/* العنصر */
+/* =========================
+   Nav Item
+========================= */
 .nav-item {
     position: relative;
     width: 64px;
@@ -22,26 +27,33 @@
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: #6b7280;
     font-size: 12px;
     font-weight: 600;
+    color: #6b7280;
 }
 
-    /* الأيقونة */
-    .nav-item img {
-        width: 24px;
-        height: 24px;
+    /* =========================
+   Icon (Material Symbols)
+========================= */
+    .nav-item .material-symbols-outlined {
+        font-size: 26px;
         margin-top: 6px;
         z-index: 1;
-        transition: transform 0.2s ease;
+        color: #6b7280;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        transition: all 0.2s ease;
     }
 
-    /* النص */
-    .nav-item span {
-        margin-top: 8px; /* 👈 نزول الكلمة */
+    /* =========================
+   Text label فقط
+========================= */
+    .nav-item span:last-child {
+        margin-top: 8px;
     }
 
-    /* 🔵 الدائرة الزرقاء (للأيقونة فقط) */
+    /* =========================
+   Blue Circle
+========================= */
     .nav-item::before {
         content: "";
         position: absolute;
@@ -49,14 +61,15 @@
         width: 42px;
         height: 42px;
         border-radius: 50%;
-        background: rgba(51, 152, 255, 0.45); /* #3398FF */
+        background: rgba(51, 152, 255, 0.45);
         opacity: 0;
         transform: scale(0.6);
         transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-
-    /* الحالة النشطة */
+    /* =========================
+   ACTIVE 🔵
+========================= */
     .nav-item.active {
         color: #3398FF;
     }
@@ -66,16 +79,20 @@
             transform: scale(1);
         }
 
-        .nav-item.active img {
+        .nav-item.active .material-symbols-outlined {
+            color: #3398FF !important;
+            font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24 !important;
             transform: scale(1.15);
         }
 
-    /* ضغط */
-    .nav-item:active img {
+    /* Press */
+    .nav-item:active .material-symbols-outlined {
         transform: scale(0.95);
     }
 
-/* Tablet */
+/* =========================
+   Tablet
+========================= */
 @media (min-width: 600px) {
     .bottom-nav {
         height: 78px;
@@ -85,8 +102,7 @@
         font-size: 13px;
     }
 
-        .nav-item img {
-            width: 26px;
-            height: 26px;
+        .nav-item .material-symbols-outlined {
+            font-size: 28px;
         }
 }
