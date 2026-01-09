@@ -1,16 +1,6 @@
-﻿/* خلفية الصفحة */
-.home-page {
-    min-height: 100vh;
-    padding: 32px 16px calc(100px + env(safe-area-inset-bottom));
-    direction: rtl;
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* ✨ اللمسة */
-    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.55);
-}
-
+﻿/* =========================
+   Base
+========================= */
 * {
     -webkit-tap-highlight-color: transparent;
 }
@@ -19,16 +9,45 @@
     outline: none;
 }
 
+/* =========================
+   الصفحة + الخلفية GIF
+========================= */
+.home-page {
+    min-height: 100vh;
+    padding: 32px 16px calc(100px + env(safe-area-inset-bottom));
+    direction: rtl;
+    background-image: url('/images/mainlogo.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.55);
+}
 
-/* كتلة الصدر */
+    /* تعتيم */
+    .home-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+    }
+
+/* =========================
+   المحتوى
+========================= */
 .home-hero {
     width: 100%;
     max-width: 520px;
     text-align: center;
-    margin-top: 10vh; /* ⬅️ 10% من ارتفاع الشاشة */
+    margin-top: 10vh;
+    position: relative;
+    z-index: 1;
 }
 
-/* العنوان */
+/* العناوين */
 .home-title {
     font-family: 'Lucida Sans', 'Segoe UI', 'Cairo', sans-serif;
     letter-spacing: 0.5px;
@@ -37,20 +56,41 @@
     color: #ffffff;
     line-height: 1.4;
     margin-bottom: 12px;
-    text-shadow: none;
 }
 
-.home-logo {
-    width: min(280px, 65vw); /* ⬅️ تكبير بسيط */
-    max-width: 280px; /* ⬅️ حد أنيق */
-    height: auto;
-    display: block;
-    margin: 28px auto 0;
+    /* خط فاصل */
+    .home-title:first-of-type::after {
+        content: "";
+        display: block;
+        width: 120px;
+        height: 2px;
+        margin: 14px auto 0;
+        background: linear-gradient( to right, transparent, rgba(255, 255, 255, 0.6), transparent );
+        border-radius: 2px;
+    }
+
+/* =========================
+   Animation (اللمسة)
+========================= */
+@keyframes heroFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+.animate-hero {
+    animation: heroFadeUp 0.8s ease-out forwards;
+}
 
-
-/* موبايل */
+/* =========================
+   موبايل
+========================= */
 @media (max-width: 480px) {
     .home-title {
         font-size: 26px;
@@ -59,14 +99,4 @@
     .home-hero {
         margin-top: 6vh;
     }
-}
-
-.home-title:first-of-type::after {
-    content: "";
-    display: block;
-    width: 120px;
-    height: 2px;
-    margin: 14px auto 0;
-    background: linear-gradient( to right, transparent, rgba(255, 255, 255, 0.6), transparent );
-    border-radius: 2px;
 }
