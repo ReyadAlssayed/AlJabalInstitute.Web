@@ -56,14 +56,14 @@
    Media (Image / Logo)
 ================================ */
 .media-box {
-    width: 105%;
-    height: 190px;
+    width: auto;
+    height: 150px;
     overflow: hidden;
     margin-bottom: 14px;
 }
 
     .media-box img {
-        width: 100%;
+        width: 32%;
     }
 
 /* ===============================
