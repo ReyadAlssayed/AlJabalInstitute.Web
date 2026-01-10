@@ -134,26 +134,24 @@
     <div class="dialog-overlay">
         <div class="dialog-box dialog-large">
 
-            <h3>حول SmartGrades</h3>
+            <h3>حول AlJabalInstitute</h3>
 
-            <video class="about-video"
-                   preload="metadata"
-                   autoplay
-                   muted
-                   playsinline
-                   controls
-                   @onended="OnVideoEnded">
-                <source src="images/video1.mp4" type="video/mp4" />
-                المتصفح لا يدعم تشغيل الفيديو
-            </video>
+            <div class="about-image-box">
+                <img src="images/rey.jpeg" alt="Rey" />
+            </div>
 
-            @if (ShowAboutText)
-            {
-                <div class="about-text">
-                    SmartGrades نظام ذكي لإدارة الدرجات ومتابعة الطلاب،
-                    صُمم ليكون بسيطًا، سريعًا، وآمنًا للأساتذة.
-                </div>
-            }
+            <div class="about-text">
+                AlJabalInstitute هو نظام مخصص للمعاهد التعليمية،
+                يهدف إلى إدارة الشؤون المالية ورصد درجات الطلبة
+                لكل سمستر، مع إمكانية إتاحة النتائج للطلبة
+                فور اعتمادها ونشرها بسهولة وبشكل منظم.
+            </div>
+
+            <div class="about-support">
+                <img src="images/whatsapp.jpg" alt="WhatsApp" />
+                <span>الدعم الفني (واتساب فقط): 0910772372</span>
+            </div>
+
 
             <button class="dialog-close" @onclick="CloseAbout">
                 إغلاق
@@ -208,10 +206,6 @@
         ShowAboutText = false;
     }
 
-    void OnVideoEnded()
-    {
-        ShowAboutText = true;
-    }
 
     void CloseAbout()
     {

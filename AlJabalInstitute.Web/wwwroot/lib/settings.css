@@ -1,5 +1,5 @@
 ﻿/* ===============================
-   الصفحة
+   الصفحة العامة
 ================================ */
 .settings-page {
     min-height: 100vh;
@@ -17,13 +17,9 @@
     height: 160px;
     padding: 24px 20px;
     border-radius: 0 0 26px 26px;
-    background: linear-gradient( 135deg, #1e3a8a 0%, /* أزرق داكن */
-    #2563eb 45%, /* أزرق واضح */
-    #60a5fa 100% /* أزرق فاتح */
-    );
+    background: linear-gradient( 135deg, #1e3a8a 0%, #2563eb 45%, #60a5fa 100% );
     box-shadow: 0 14px 32px rgba(30, 58, 138, 0.45), inset 0 -6px 12px rgba(255,255,255,0.15);
 }
-
 
 .header-content {
     display: flex;
@@ -39,6 +35,7 @@
     overflow: hidden;
     background-color: rgba(255, 255, 255, 0.25);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
     .image-avatar img {
@@ -68,8 +65,15 @@
 /* ===============================
    قائمة الإعدادات
 ================================ */
+.settings-section-title {
+    margin: 26px 18px 14px;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: #6b7280;
+}
+
 .settings-list {
-    margin-top: 26px;
+    margin-top: 10px;
     padding: 0 18px;
     display: flex;
     flex-direction: column;
@@ -77,7 +81,7 @@
 }
 
 .settings-item {
-    background-color: transparent; /* نفس لون الصفحة */
+    background-color: #ffffff;
     padding: 16px 18px;
     border-radius: 14px;
     display: flex;
@@ -86,26 +90,22 @@
     font-size: 15px;
     font-weight: 600;
     color: #111;
-    border: 1px solid #dfe3e8; /* أقوى قليلًا من #eee */
+    border: 1px solid #dfe3e8;
     cursor: pointer;
     transition: background 0.12s ease, border-color 0.12s ease;
 }
 
-    /* Hover بسيط جدًا */
     .settings-item:hover {
         background-color: rgba(0,0,0,0.02);
         border-color: #cfd5dc;
     }
 
-
-/* الجزء الأيسر (أيقونة + نص) */
 .item-left {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* أيقونة */
 .item-icon {
     width: 22px;
     height: 22px;
@@ -113,15 +113,9 @@
     opacity: 0.85;
 }
 
-/* السهم */
 .arrow {
     font-size: 18px;
     color: #9ca3af;
-}
-
-/* إصدار التطبيق */
-.version-item {
-    cursor: default;
 }
 
 .version-text {
@@ -140,7 +134,7 @@
     gap: 8px;
     padding: 12px 22px;
     border-radius: 12px;
-    background-color: red;
+    background-color: #dc2626;
     color: #fff;
     font-size: 14px;
     font-weight: 600;
@@ -162,7 +156,7 @@
 }
 
 /* ===============================
-   Dialog Overlay
+   Dialog Overlay & Box
 ================================ */
 .dialog-overlay {
     position: fixed;
@@ -175,7 +169,6 @@
     z-index: 2000;
 }
 
-/* Dialog Box */
 .dialog-box {
     width: 92%;
     max-width: 440px;
@@ -183,42 +176,99 @@
     border-radius: 20px;
     padding: 22px;
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+    max-height: 85vh;
+    overflow-y: auto;
     animation: dialogFade 0.25s ease;
 }
 
-.dialog-large {
-    max-width: 600px;
+    .dialog-box h3 {
+        margin-bottom: 16px;
+        font-size: 19px;
+        font-weight: 800;
+        color: #1e3fa9;
+        text-align: center;
+    }
+
+.about-image-box {
+    width: 190px !important;
+    height: 190px !important;
+    margin: 0 auto 20px auto !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative;
+    overflow: hidden !important;
+    /* إضافة الإطار الملون */
+    padding: 4px;
+    background: linear-gradient(135deg, #1e3a8a, #60a5fa, #2563eb);
+    background-size: 200% 200%;
+    animation: gradientMove 4s ease infinite; /* الأنيميشن المطلوب */
 }
 
-.dialog-box h3 {
-    margin-bottom: 16px;
-    font-size: 19px;
-    font-weight: 800;
-    color: #1e3fa9;
-    text-align: center;
+/* حركة الألوان داخل الإطار */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
-/* Video */
-.about-video {
-    width: 100%;
-    max-height: 340px;
-    border-radius: 14px;
-    background: #000;
-    display: block;
+.about-image-box img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 3px solid #fff; /* فاصل أبيض لإبراز الصورة */
 }
 
-/* About text */
+/* ===============================
+   نص حول التطبيق والدعم
+================================ */
 .about-text {
-    margin-top: 16px;
+    margin-top: 12px;
     padding: 14px;
     background-color: #f5f6f8;
     border-radius: 12px;
     font-size: 14px;
     color: #333;
-    line-height: 1.7;
+    line-height: 1.8;
+    text-align: center;
 }
 
-/* Inputs */
+.about-support {
+    margin-top: 14px;
+    padding: 10px;
+    border-top: 1px dashed #e5e7eb;
+    background-color: #f0fdf4; /* خلفية خضراء باهتة جداً */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+    .about-support img {
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        object-fit: contain !important;
+        border-radius: 4px;
+    }
+
+/* ===============================
+   Inputs & Dialog Buttons
+================================ */
 .dialog-box input {
     width: 100%;
     padding: 12px 14px;
@@ -226,16 +276,17 @@
     border-radius: 10px;
     border: 1px solid #ddd;
     font-size: 14px;
+    direction: rtl;
+    text-align: right;
 }
 
-/* Dialog buttons */
 .dialog-action {
     width: 100%;
     padding: 12px;
     margin-top: 8px;
     border-radius: 12px;
     border: none;
-    background: linear-gradient( 135deg, rgba(25, 65, 200, 0.95), rgba(60, 120, 255, 0.85) );
+    background: linear-gradient( 135deg, #1e3a8a, #2563eb );
     color: #fff;
     font-weight: 700;
     cursor: pointer;
@@ -247,12 +298,15 @@
     margin-top: 12px;
     border-radius: 12px;
     border: none;
-    background-color: #eee;
+    background: linear-gradient( 135deg, #1e3a8a 0%, #2563eb 45%, #60a5fa 100% );
+    color: #444;
     font-weight: 600;
     cursor: pointer;
 }
 
-/* Animation */
+/* ===============================
+   Animations & Mobile
+================================ */
 @keyframes dialogFade {
     from {
         transform: translateY(12px);
@@ -265,49 +319,17 @@
     }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
     .settings-header {
         height: 150px;
     }
 
-    .user-name {
-        font-size: 16px;
+    .about-image-box {
+        height: 150px !important;
     }
 
-    .dialog-large {
-        max-width: 95%;
+    .dialog-box {
+        width: 95%;
+        padding: 18px;
     }
-
-    .about-video {
-        max-height: 300px;
-    }
-}
-
-/* رسالة خطأ */
-.error-text {
-    color: #c0392b;
-    font-size: 13px;
-    margin: 8px 0;
-    text-align: center;
-    font-weight: 600;
-}
-
-/* RTL inputs */
-.rtl-input {
-    direction: rtl;
-    text-align: right;
-}
-
-    .rtl-input::placeholder {
-        direction: rtl;
-        text-align: right;
-    }
-
-.settings-section-title {
-    margin: 26px 18px 14px;
-    font-size: 15.5px; /* أكبر قليلاً */
-    font-weight: 800; /* أوضح */
-    color: #6b7280; /* رمادي هادئ */
-    letter-spacing: 1px; /* توسعة الحروف (مهم) */
 }
