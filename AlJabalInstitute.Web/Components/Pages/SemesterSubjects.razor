@@ -3,7 +3,6 @@
 @using AlJabalInstitute.Web.Models
 @rendermode InteractiveServer
 
-
 <h3>مواد السمستر: @SemesterName</h3>
 
 @if (!IsSemesterActive)
@@ -23,7 +22,9 @@
 
 @if (SubjectsInSemester.Count == 0)
 {
-    <p style="text-align:center">لا توجد مواد مضافة لهذا السمستر</p>
+    <div class="empty-state">
+        لا توجد مواد مضافة لهذا السمستر
+    </div>
 }
 else
 {

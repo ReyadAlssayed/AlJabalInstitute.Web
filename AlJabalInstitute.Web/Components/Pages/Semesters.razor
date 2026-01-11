@@ -2,7 +2,6 @@
 @layout MainLayout
 @rendermode InteractiveServer
 
-
 @inject AlJabalInstitute.Web.Services.DataServices DataServices
 @inject NavigationManager Nav
 
@@ -12,16 +11,17 @@
     <div class="page-header">
         <h2>السيمسترات</h2>
         <button class="add-btn" @onclick="OpenAddDialog">
+            <i class="fas fa-plus-circle ml-2"></i>
             إضافة سمستر جديد
         </button>
     </div>
-    <hr />
 
     <!-- Cards -->
     <div class="cards-container">
         @if (SemesterList.Count == 0)
         {
-            <p style="text-align:center; color:#777">
+            <p>
+                <i class="fas fa-calendar-times ml-2"></i>
                 لا توجد سيمسترات بعد
             </p>
         }
@@ -33,7 +33,10 @@
 
                     <!-- Header -->
                     <div class="card-header">
-                        <span class="semester-name">@s.SemesterName</span>
+                        <span class="semester-name">
+                            <i class="fas fa-graduation-cap ml-2"></i>
+                            @s.SemesterName
+                        </span>
 
                         <span class="status-badge @(s.IsFinished ? "inactive" : "active")">
                             @(s.IsFinished ? "غير نشط" : "نشط")
@@ -55,23 +58,27 @@
                     <div class="card-actions">
                         <button class="delete-btn"
                                 @onclick="() => OpenDeleteDialog(s)">
+                            <i class="fas fa-trash ml-2"></i>
                             حذف
                         </button>
 
                         <button class="toggle-btn"
                                 @onclick="() => ToggleStatus(s)">
+                            <i class="fas fa-toggle-on ml-2"></i>
                             @(s.IsFinished ? "تفعيل" : "إنهاء")
                         </button>
 
                         <button class="edit-btn"
                                 @onclick="() => OpenEditDialog(s)">
+                            <i class="fas fa-edit ml-2"></i>
                             تعديل
                         </button>
                     </div>
 
-                    <!-- ⭐ DETAILS (رسمي – أسفل الكرت) -->
+                    <!-- Details -->
                     <button class="details-link"
                             @onclick="() => GoToDetails(s.Id)">
+                        <i class="fas fa-eye ml-2"></i>
                         عرض تفاصيل السمستر والمواد
                     </button>
 
@@ -88,7 +95,10 @@
     <div class="dialog-overlay">
         <div class="dialog-box dialog-accent">
 
-            <h3>@DialogTitle</h3>
+            <h3>
+                <i class="fas fa-ml-2"></i>
+                @DialogTitle
+            </h3>
 
             <input class="rtl-input"
                    placeholder="اسم السمستر"
@@ -104,14 +114,19 @@
 
             @if (!string.IsNullOrEmpty(FormError))
             {
-                <div class="error-text">@FormError</div>
+                <div class="error-text">
+                    <i class="fas fa-exclamation-circle ml-2"></i>
+                    @FormError
+                </div>
             }
 
             <button class="dialog-action" @onclick="SaveSemester">
+                <i class="fas fa-save ml-2"></i>
                 حفظ
             </button>
 
             <button class="dialog-close" @onclick="CloseFormDialog">
+                <i class="fas fa-times ml-2"></i>
                 إلغاء
             </button>
 
@@ -125,18 +140,23 @@
     <div class="dialog-overlay">
         <div class="dialog-box dialog-danger">
 
-            <h3>تأكيد الحذف</h3>
+            <h3>
+                <i class="fas fa-exclamation-triangle ml-2"></i>
+                تأكيد الحذف
+            </h3>
 
-            <p style="text-align:center">
+            <p>
                 هل أنت متأكد من حذف سمستر
                 <strong>@SelectedSemester?.SemesterName</strong>؟
             </p>
 
             <button class="dialog-action danger" @onclick="ConfirmDelete">
+                <i class="fas fa-trash ml-2"></i>
                 نعم، احذف
             </button>
 
             <button class="dialog-close" @onclick="CloseDeleteDialog">
+                <i class="fas fa-times ml-2"></i>
                 إلغاء
             </button>
 
@@ -159,6 +179,7 @@
     DateTime FormStart = DateTime.Today;
     DateTime FormEnd = DateTime.Today.AddMonths(3);
     string FormError = "";
+
     protected override async Task OnInitializedAsync()
     {
         if (!DataServices.IsLoggedIn)
@@ -169,7 +190,6 @@
 
         SemesterList = await DataServices.GetSemestersAsync();
     }
-
 
     // ===================== NAVIGATION =====================
     void GoToDetails(Guid semesterId)

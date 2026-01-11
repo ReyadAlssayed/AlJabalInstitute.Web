@@ -1,6 +1,7 @@
 using AlJabalInstitute.Web.Components;
 using AlJabalInstitute.Web.Services;
 using AlJabalInstitute.Web.Services;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<DataServices>();
+builder.Services.AddRadzenComponents();
+
 
 var app = builder.Build();
 
