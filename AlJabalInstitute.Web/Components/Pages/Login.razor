@@ -1,176 +1,42 @@
 ﻿@page "/"
-@inject AlJabalInstitute.Web.Services.DataServices DataServices
-@inject NavigationManager Nav
 @layout AuthLayout
 @rendermode InteractiveServer
 
 <div class="register-box">
 
-    <!-- IMAGE -->
+    <!-- ICON / LOGO -->
     <div class="media-box">
-        <img src="images/loginpic.png" alt="" />
+        <img src="images/loginpic.png" alt="معهد الجبل العالي" />
     </div>
 
     <!-- TITLE -->
-    <h2 class="title">تسجيل الدخول</h2>
+    
+    <p style="font-size:14px;color:#9ca3af;margin-bottom:26px">
+        تسجيل الدخول للطلبة
+    </p>
 
-    <!-- FULL NAME -->
+    <!-- REGISTRATION NUMBER -->
     <div class="field">
-        <label>اسم الأستاذ</label>
-        <input placeholder="اكتب اسمك الكامل"
-               maxlength="30"
-               @bind="fullName"
-               disabled="@isLoading" />
-    </div>
-
-    <!-- PASSWORD -->
-    <div class="field password-field">
-        <label>كلمة المرور</label>
-
-        <input type="@passwordType"
-               placeholder="أدخل كلمة المرور"
-               maxlength="30"
-               @bind="password"
-               disabled="@isLoading" />
-
-        <button type="button"
-                class="toggle-text"
-                @onclick="TogglePassword"
-                disabled="@isLoading">
-            @(passwordType == "password" ? "إظهار" : "إخفاء")
-        </button>
+        <label>أدخل رقم القيد لهذا السيم</label>
+        <input placeholder="أدخل رقم القيد الخاص بك"
+               maxlength="20" />
     </div>
 
     <!-- BUTTON -->
-    <button @onclick="DoLogin" disabled="@isLoading">
+    <button>
         تسجيل الدخول
     </button>
 
-    <!-- REGISTER LINK -->
-    <div class="login-hint">
-        ليس لديك حساب؟
-        <a href="/Register">حساب جديد</a>
+    <!-- NOTES (OPTIONAL) -->
+    <div class="field optional-note">
+        <label>في حال واجهتك مشكلة</label>
+        <textarea placeholder="اكتب ملاحظتك هنا ..."
+                  rows="3"></textarea>
+
+        <button type="button" class="note-btn">
+            إرسال الملاحظة
+        </button>
     </div>
+
 
 </div>
-
-<!-- ================= LOADING OVERLAY ================= -->
-@if (isLoading)
-{
-    <div class="loading-overlay">
-        <div class="loading-box">
-            <img src="images/wait.gif" alt="loading" />
-            <p>جاري التحقق...</p>
-        </div>
-    </div>
-}
-
-<!-- ================= DIALOG ================= -->
-@if (showDialog)
-{
-    <div class="dialog-overlay">
-        <div class="dialog-box @dialogType">
-            <div class="dialog-icon">@dialogIcon</div>
-            <p>@dialogMessage</p>
-            <button @onclick="CloseDialog">حسناً</button>
-        </div>
-    </div>
-}
-
-@code {
-
-    string fullName = string.Empty;
-    string password = string.Empty;
-
-    string passwordType = "password";
-
-    const int LoginTimeoutSeconds = 20;
-
-    bool isLoading = false;
-
-    bool showDialog = false;
-    string dialogMessage = string.Empty;
-    string dialogType = string.Empty;
-    string dialogIcon = string.Empty;
-
-    void TogglePassword()
-    {
-        passwordType = passwordType == "password" ? "text" : "password";
-    }
-
-    async Task DoLogin()
-    {
-        if (isLoading) return;
-        isLoading = true;
-
-        if (string.IsNullOrWhiteSpace(fullName))
-        {
-            ShowError("اسم الأستاذ مطلوب");
-            isLoading = false;
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            ShowError("كلمة المرور مطلوبة");
-            isLoading = false;
-            return;
-        }
-
-        try
-        {
-            var loginTask = DataServices.LoginAsync(fullName, password);
-            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(LoginTimeoutSeconds));
-
-            var completedTask = await Task.WhenAny(loginTask, timeoutTask);
-
-            if (completedTask == timeoutTask)
-            {
-                ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
-                isLoading = false;
-                return;
-            }
-
-            var teacher = await loginTask;
-
-            if (teacher == null)
-            {
-                ShowError("اسم المستخدم أو كلمة المرور غير صحيحة");
-                isLoading = false;
-                return;
-            }
-
-            ShowSuccess("تم تسجيل الدخول بنجاح");
-
-            await Task.Delay(500);
-            Nav.NavigateTo("/Home", true);
-        }
-        catch
-        {
-            ShowError("تعذر الاتصال بالخادم، تحقق من الإنترنت");
-            isLoading = false;
-        }
-    }
-
-    void ShowError(string text)
-    {
-        dialogMessage = text;
-        dialogType = "error";
-        dialogIcon = "✖";
-        showDialog = true;
-    }
-
-    void ShowSuccess(string text)
-    {
-        dialogMessage = text;
-        dialogType = "success";
-        dialogIcon = "✔";
-        showDialog = true;
-    }
-
-    void CloseDialog()
-    {
-        showDialog = false;
-        isLoading = false;
-    }
-}

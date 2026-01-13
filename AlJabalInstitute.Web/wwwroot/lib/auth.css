@@ -1,5 +1,5 @@
 ﻿/* ===============================
-   Reset + Font
+   RESET + FONT
 ================================ */
 .page-auth,
 .page-auth * {
@@ -8,11 +8,11 @@
 }
 
 /* ===============================
-   Page Background
+   PAGE BACKGROUND
 ================================ */
 .page-auth {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+    background: linear-gradient( to bottom, #f8fbff 0%, #eef4ff 50%, #f8fbff 100% );
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,270 +21,166 @@
 }
 
 /* ===============================
-   Auth Box
+   CARD
 ================================ */
 .register-box {
-    background-color: #ffffff;
     width: 100%;
-    max-width: 360px;
-    min-height: 640px;
-    padding: 46px 26px 40px;
+    max-width: 440px;
+    background: #ffffff;
+    padding: 28px 28px 26px;
     border-radius: 22px;
-    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.12), 0 6px 16px rgba(0, 0, 0, 0.06);
     text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
-    /* ===============================
-   Top Dots Decoration
-================================ */
-    .register-box::before {
-        content: "";
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        width: 46px;
-        height: 14px;
-        background: radial-gradient(circle 7px at 7px 7px, #60a5fa 99%, transparent 100%), radial-gradient(circle 5px at 23px 7px, #38bdf8 99%, transparent 100%), radial-gradient(circle 3px at 36px 7px, #22d3ee 99%, transparent 100%);
-        background-repeat: no-repeat;
-    }
-
 /* ===============================
-   Media (Image / Logo)
+   LOGO
 ================================ */
 .media-box {
-    width: auto;
-    height: 150px;
-    overflow: hidden;
-    margin-bottom: 14px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
     .media-box img {
-        width: 32%;
+        width: clamp(220px, 42vw, 320px);
+        height: auto;
     }
 
+
 /* ===============================
-   Title
+   STUDENT TITLE
 ================================ */
-.title {
-    font-size: 25px;
-    font-weight: 700;
-    color: #0f3d4c;
-    margin-bottom: 28px;
+.student-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 18px;
 }
 
 /* ===============================
-   Fields Area
-================================ */
-.fields-area {
-    min-height: 220px;
-}
-
-/* ===============================
-   Input Field
+   FIELD
 ================================ */
 .field {
     text-align: right;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
     .field label {
         font-size: 13px;
         font-weight: 600;
-        color: #6b7280;
+        color: #64748b;
         margin-bottom: 6px;
         display: block;
     }
 
-    .field input {
+    .field input,
+    .field textarea {
         width: 100%;
         padding: 13px 14px;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        font-size: 15px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        font-size: 14px;
+        background: #f9fbff;
+        transition: all 0.25s ease;
     }
 
-        .field input:focus {
-            outline: none;
-            border-color: #1b6f82;
-        }
-/* ===============================
-   Password Toggle (Show / Hide)
+        /* ===============================
+   FOCUS SMOOTH UX
 ================================ */
-.password-field {
-    position: relative;
-}
-
-    .password-field input {
-        padding-left: 52px; /* مساحة لكلمة إظهار */
-    }
-
-.toggle-text {
-    position: absolute;
-    left: 14px;
-    top: 36px;
-    background: none;
-    border: none;
-    font-size: 12px;
-    color: #9ca3af; /* رصاصي باهت رسمي */
-    cursor: pointer;
-    padding: 0;
-}
-
-    .toggle-text:hover {
-        color: #6b7280;
-    }
+        .field input:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
 
 /* ===============================
-   Main Button
+   MAIN BUTTON
 ================================ */
 .register-box > button {
-
     width: 100%;
+    margin-top: 10px;
     padding: 14px;
     border-radius: 14px;
-    background-color: #1C8385;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
     border: none;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+    .register-box > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
+    }
+
+    .register-box > button:active {
+        transform: translateY(0);
+    }
+
+/* ===============================
+   OPTIONAL NOTE
+================================ */
+.optional-note {
+    margin-top: 18px;
+    opacity: 0.75;
+}
+
+    .optional-note label {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+
+/* ===============================
+   NOTE BUTTON
+================================ */
+.note-btn {
     margin-top: 10px;
-    transition: background-color 0.2s ease;
-}
-
-    .register-box button:hover:not(:disabled) {
-        background-color: #155d6d;
-    }
-
-    .register-box button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-/* ===============================
-   Bottom Hint Link
-================================ */
-.login-hint {
-    margin-top: 22px;
-    font-size: 14px;
-    color: #6b7280;
-}
-
-    .login-hint a {
-        color: #1b6f82;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-/* ===============================
-   Loading Overlay
-================================ */
-.loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
-}
-
-.loading-box {
-    background: #ffffff;
-    padding: 26px 32px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-}
-
-    .loading-box img {
-        width: 42px;
-        height: 42px;
-        margin-bottom: 12px;
-    }
-
-    .loading-box p {
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-    }
-
-/* ===============================
-   Dialog
-================================ */
-.dialog-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 4000;
-}
-
-.dialog-box {
-    background: #ffffff;
-    width: 280px;
-    padding: 22px;
-    border-radius: 14px;
-    text-align: center;
-}
-
-.dialog-icon {
-    font-size: 34px;
-    margin-bottom: 10px;
-}
-
-.dialog-box.success .dialog-icon {
-    color: #27ae60;
-}
-
-.dialog-box.error .dialog-icon {
-    color: #c0392b;
-}
-
-.dialog-box p {
-    font-size: 14px;
-    margin: 10px 0 16px;
-}
-
-.dialog-box button {
-    padding: 8px 26px;
-    border-radius: 10px;
-    background: #1C8385;
-    color: #ffffff;
-    font-size: 14px;
-    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px dashed #c7d2fe;
+    background: #f8fbff;
+    color: #1e40af;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .note-btn:hover {
+        background: #eef2ff;
+    }
+
+/* ===============================
+   ANIMATION
+================================ */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===============================
-   Mobile
+   MOBILE
 ================================ */
 @media (max-width: 480px) {
     .register-box {
-        min-height: 620px;
-        padding: 40px 22px;
+        padding: 24px 20px 22px;
     }
 
-    .title {
-        font-size: 22px;
+    .student-title {
+        margin-bottom: 14px;
     }
-
-    .media-box {
-        height: 150px;
-        overflow: hidden;
-    }
-
-        .media-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top;
-        }
 }
-
