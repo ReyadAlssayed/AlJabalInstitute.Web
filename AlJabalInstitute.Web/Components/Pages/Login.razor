@@ -4,7 +4,6 @@
 @layout AuthLayout
 @rendermode InteractiveServer
 
-
 <div class="register-box">
 
     <!-- IMAGE -->
@@ -25,13 +24,21 @@
     </div>
 
     <!-- PASSWORD -->
-    <div class="field">
+    <div class="field password-field">
         <label>كلمة المرور</label>
-        <input type="password"
+
+        <input type="@passwordType"
                placeholder="أدخل كلمة المرور"
                maxlength="30"
                @bind="password"
                disabled="@isLoading" />
+
+        <button type="button"
+                class="toggle-text"
+                @onclick="TogglePassword"
+                disabled="@isLoading">
+            @(passwordType == "password" ? "إظهار" : "إخفاء")
+        </button>
     </div>
 
     <!-- BUTTON -->
@@ -74,8 +81,10 @@
 
     string fullName = string.Empty;
     string password = string.Empty;
-    const int LoginTimeoutSeconds = 20;
 
+    string passwordType = "password";
+
+    const int LoginTimeoutSeconds = 20;
 
     bool isLoading = false;
 
@@ -83,6 +92,11 @@
     string dialogMessage = string.Empty;
     string dialogType = string.Empty;
     string dialogIcon = string.Empty;
+
+    void TogglePassword()
+    {
+        passwordType = passwordType == "password" ? "text" : "password";
+    }
 
     async Task DoLogin()
     {
@@ -110,7 +124,6 @@
 
             var completedTask = await Task.WhenAny(loginTask, timeoutTask);
 
-            // ⛔ انتهى الوقت
             if (completedTask == timeoutTask)
             {
                 ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
@@ -118,7 +131,6 @@
                 return;
             }
 
-            // ✅ نأخذ نتيجة تسجيل الدخول
             var teacher = await loginTask;
 
             if (teacher == null)
@@ -139,7 +151,6 @@
             isLoading = false;
         }
     }
-
 
     void ShowError(string text)
     {
@@ -163,4 +174,3 @@
         isLoading = false;
     }
 }
-

@@ -111,11 +111,38 @@
             outline: none;
             border-color: #1b6f82;
         }
+/* ===============================
+   Password Toggle (Show / Hide)
+================================ */
+.password-field {
+    position: relative;
+}
+
+    .password-field input {
+        padding-left: 52px; /* مساحة لكلمة إظهار */
+    }
+
+.toggle-text {
+    position: absolute;
+    left: 14px;
+    top: 36px;
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: #9ca3af; /* رصاصي باهت رسمي */
+    cursor: pointer;
+    padding: 0;
+}
+
+    .toggle-text:hover {
+        color: #6b7280;
+    }
 
 /* ===============================
    Main Button
 ================================ */
-.register-box button {
+.register-box > button {
+
     width: 100%;
     padding: 14px;
     border-radius: 14px;
@@ -260,3 +287,4 @@
             object-position: top;
         }
 }
+

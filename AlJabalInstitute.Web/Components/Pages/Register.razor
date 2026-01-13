@@ -4,7 +4,6 @@
 @inject NavigationManager Nav
 @rendermode InteractiveServer
 
-
 <div class="register-box">
 
     <!-- LOGO -->
@@ -26,22 +25,40 @@
                    disabled="@isLoading" />
         </div>
 
-        <div class="field">
+        <!-- PASSWORD -->
+        <div class="field password-field">
             <label>كلمة المرور</label>
-            <input type="password"
+
+            <input type="@passwordType"
                    placeholder="أدخل كلمة المرور"
                    maxlength="30"
                    @bind="password"
                    disabled="@isLoading" />
+
+            <button type="button"
+                    class="toggle-text"
+                    @onclick="TogglePassword"
+                    disabled="@isLoading">
+                @(passwordType == "password" ? "إظهار" : "إخفاء")
+            </button>
         </div>
 
-        <div class="field">
+        <!-- CONFIRM PASSWORD -->
+        <div class="field password-field">
             <label>تأكيد كلمة المرور</label>
-            <input type="password"
+
+            <input type="@confirmPasswordType"
                    placeholder="أعد إدخال كلمة المرور"
                    maxlength="30"
                    @bind="confirmPassword"
                    disabled="@isLoading" />
+
+            <button type="button"
+                    class="toggle-text"
+                    @onclick="ToggleConfirmPassword"
+                    disabled="@isLoading">
+                @(confirmPasswordType == "password" ? "إظهار" : "إخفاء")
+            </button>
         </div>
 
     </div>
@@ -88,6 +105,9 @@
     string password = string.Empty;
     string confirmPassword = string.Empty;
 
+    string passwordType = "password";
+    string confirmPasswordType = "password";
+
     const int RegisterTimeoutSeconds = 20;
     bool isLoading = false;
 
@@ -97,6 +117,16 @@
     string dialogMessage = string.Empty;
     string dialogType = string.Empty;
     string dialogIcon = string.Empty;
+
+    void TogglePassword()
+    {
+        passwordType = passwordType == "password" ? "text" : "password";
+    }
+
+    void ToggleConfirmPassword()
+    {
+        confirmPasswordType = confirmPasswordType == "password" ? "text" : "password";
+    }
 
     async Task CreateAccount()
     {
