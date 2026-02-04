@@ -1,161 +1,133 @@
 ﻿/* ===============================
-   STUDENT AUTH PAGE
+   SHELL (FULL WIDTH TOP/BOTTOM)
 ================================ */
-.student-auth-page {
+.student-auth-shell {
     min-height: 100vh;
+    direction: rtl;
+    background: linear-gradient(180deg, #eef2ff 0%, #f6f7ff 55%, #ffffff 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+/* top full width */
+.student-auth-top {
+    height: clamp(110px, 18vw, 170px);
+    background: linear-gradient(90deg, #8b5cf6 0%, #60a5fa 60%, #22c55e 120%);
+    clip-path: polygon( 0 0, 100% 0, 100% 70%, 70% 85%, 55% 60%, 35% 90%, 15% 65%, 0 80% );
+}
+
+/* bottom full width */
+.student-auth-bottom {
+    height: clamp(95px, 16vw, 150px);
+    background: linear-gradient(90deg, #8b5cf6 0%, #60a5fa 60%, #22c55e 120%);
+    clip-path: polygon( 0 35%, 18% 60%, 40% 30%, 55% 70%, 72% 25%, 100% 55%, 100% 100%, 0 100% );
+}
+
+/* center area */
+.student-auth-page {
+    flex: 1; /* يأخذ كل المساحة بين التوب والبوتوم */
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 24px;
-    direction: rtl;
-    background: radial-gradient(1200px 600px at 50% -120px, #dbeafe 0%, #eff6ff 35%, #f8fafc 75%);
 }
 
 /* ===============================
    CARD
 ================================ */
 .student-auth-card {
-    width: min(460px, 92vw);
+    width: min(420px, 92vw);
     background: #fff;
-    border-radius: 24px;
-    overflow: hidden;
-    border: 1px solid rgba(148,163,184,.35);
-    box-shadow: 0 18px 50px rgba(2, 6, 23, .12);
-}
-
-/* ===============================
-   HERO (TOP CURVES) - LESS NOISE
-================================ */
-.student-auth-hero {
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,.25);
+    box-shadow: 0 18px 55px rgba(2, 6, 23, .10);
     position: relative;
-    padding: 26px 22px 78px;
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #60a5fa 100%);
+    overflow: hidden;
 }
-
-.hero-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    color: #fff;
-    gap: 8px;
-}
-
-.institute-name {
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: .2px;
-}
-
-.hero-subtitle {
-    font-size: 13px;
-    opacity: .92;
-    font-weight: 700;
-}
-
-/* waves */
-.hero-wave {
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 88px;
-    display: block;
-}
-
-.wave-back {
-    opacity: .55;
-    filter: blur(.2px);
-}
-
-    .wave-back path {
-        fill: #ffffff;
-    }
-
-.wave-front {
-    height: 82px;
-    filter: drop-shadow(0 -8px 18px rgba(0,0,0,.07));
-}
-
-    .wave-front path {
-        fill: #ffffff;
-    }
 
 /* ===============================
    BODY
 ================================ */
 .student-auth-body {
-    padding: 18px 22px 22px;
+    padding: 26px;
+    position: relative;
 }
 
+    /* title */
+    .student-auth-body::before {
+        content: "LOGIN";
+        display: block;
+        margin-bottom: 18px;
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: .6px;
+        color: #0f172a;
+        text-align: left;
+        direction: ltr;
+    }
+
 /* ===============================
-   FIELDS
+   FIELDS (underline style)
 ================================ */
 .field {
     position: relative;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
-
-    .field label {
-        display: block;
-        font-size: 13px;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 8px;
-    }
 
     .field input {
         width: 100%;
-        height: 48px;
-        border-radius: 999px;
-        border: 1px solid #cbd5e1;
-        padding: 0 16px;
-        outline: none;
-        background: #fff;
+        height: 44px;
+        border: none;
+        border-bottom: 1px solid #cbd5e1;
+        background: transparent;
+        padding: 0 0 6px 0;
         font-size: 14px;
-        transition: .15s;
+        outline: none;
+        color: #0f172a;
     }
 
-        .field input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59,130,246,.18);
+        .field input::placeholder {
+            color: #94a3b8;
         }
 
-/* show/hide button (text only) */
+        .field input:focus {
+            border-bottom-color: #6366f1;
+        }
+
+/* show password */
 .field-action {
     position: absolute;
-    left: 10px;
-    top: 38px;
-    transform: translateY(-50%);
-    border: 0;
+    left: 0;
+    top: 6px;
     background: transparent;
-    color: #1d4ed8;
-    font-weight: 900;
+    border: none;
     font-size: 12px;
+    font-weight: 800;
+    color: #64748b;
     cursor: pointer;
-    padding: 6px 10px;
-    border-radius: 999px;
+    padding: 4px 6px;
+    border-radius: 8px;
 }
 
     .field-action:hover {
-        background: rgba(29,78,216,.08);
+        background: rgba(15,23,42,.06);
     }
 
 /* ===============================
-   PRIMARY BUTTON
+   BUTTON
 ================================ */
 .primary-btn {
     width: 100%;
-    height: 50px;
-    border: 0;
-    border-radius: 999px;
-    cursor: pointer;
-    font-weight: 900;
+    height: 44px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #5b5ce6;
     color: #fff;
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #60a5fa 100%);
-    box-shadow: 0 14px 30px rgba(29,78,216,.25);
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(91,92,230,.22);
     transition: .15s;
-    margin-top: 8px;
 }
 
     .primary-btn:hover {
@@ -167,42 +139,28 @@
     }
 
 /* ===============================
-   NOTE LINK (quiet)
+   NOTE LINK
 ================================ */
 .note-link-wrap {
-    margin-top: 14px;
-    text-align: center;
-    font-size: 13px;
-    color: #475569;
+    margin-top: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    font-size: 13px;
+    color: #64748b;
     flex-wrap: wrap;
 }
 
-.note-hint {
-    font-weight: 700;
-    opacity: .9;
-}
-
 .note-open {
-    color: #1d4ed8;
+    color: #5b5ce6;
     font-weight: 900;
+    text-decoration: underline;
     cursor: pointer;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(59,130,246,.35);
-    background: rgba(59,130,246,.08);
-    transition: .15s;
 }
-
-    .note-open:hover {
-        background: rgba(59,130,246,.14);
-    }
 
 /* ===============================
-   MODAL (pure CSS, smooth)
+   MODAL (CSS ONLY)
 ================================ */
 .note-toggle {
     display: none;
@@ -211,10 +169,15 @@
 .note-modal {
     position: fixed;
     inset: 0;
-    pointer-events: none;
     opacity: 0;
-    transition: .18s ease;
+    pointer-events: none;
+    transition: .2s ease;
     z-index: 9999;
+}
+
+.note-toggle:checked ~ .note-modal {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .note-backdrop {
@@ -228,22 +191,20 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -46%) scale(.98);
+    transform: translate(-50%, -50%);
     width: min(520px, 92vw);
     background: #fff;
-    border-radius: 18px;
+    border-radius: 14px;
     border: 1px solid rgba(148,163,184,.35);
-    box-shadow: 0 24px 70px rgba(2, 6, 23, .22);
-    overflow: hidden;
-    transition: .18s ease;
+    box-shadow: 0 24px 70px rgba(2,6,23,.22);
 }
 
 .note-dialog-head {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(148,163,184,.28);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(148,163,184,.28);
 }
 
 .note-title {
@@ -252,67 +213,33 @@
 }
 
 .note-close {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    color: #0f172a;
-    background: rgba(15,23,42,.06);
     font-size: 20px;
     font-weight: 900;
 }
 
-    .note-close:hover {
-        background: rgba(15,23,42,.10);
-    }
-
 .note-dialog-body {
-    padding: 14px 16px 16px;
+    padding: 14px;
 }
 
     .note-dialog-body textarea {
         width: 100%;
-        border-radius: 14px;
+        min-height: 110px;
+        border-radius: 12px;
         border: 1px solid #cbd5e1;
         padding: 12px;
-        outline: none;
         font-size: 14px;
-        resize: vertical;
-        min-height: 110px;
-        transition: .15s;
+        outline: none;
     }
-
-        .note-dialog-body textarea:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59,130,246,.18);
-        }
 
 .note-btn {
     margin-top: 10px;
     width: 100%;
-    height: 44px;
-    border-radius: 12px;
-    border: 0;
-    background: rgba(59,130,246,.14);
-    color: #1d4ed8;
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(91,92,230,.14);
+    color: #5b5ce6;
     font-weight: 900;
     cursor: pointer;
-    transition: .15s;
 }
-
-    .note-btn:hover {
-        background: rgba(59,130,246,.20);
-    }
-
-/* open state */
-.note-toggle:checked ~ .note-modal {
-    pointer-events: auto;
-    opacity: 1;
-}
-
-    .note-toggle:checked ~ .note-modal .note-dialog {
-        transform: translate(-50%, -50%) scale(1);
-    }
