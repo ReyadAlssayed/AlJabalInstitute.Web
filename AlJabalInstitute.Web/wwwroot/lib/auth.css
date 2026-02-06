@@ -1,16 +1,17 @@
 ﻿/* =========================================
    STUDENT AUTH (Login) - Full CSS
-   Background image: wwwroot/images/back.png
+   Background image: wwwroot/images/mainlogo.jpg
    ========================================= */
-
 :root {
     --card-radius: 22px;
     --shadow: 0 18px 50px rgba(2, 6, 23, .15);
     --border: #e5e7eb;
     --muted: #64748b;
     --text: #0f172a;
-    --primary: #166534; /* زر */
-    --primary-2: #0f766e; /* لمسات */
+    /* 🔵 أزرق أهدأ (أخف من السابق) */
+    --primary: #3b82f6; /* زر تسجيل الدخول */
+    --primary-2: #60a5fa; /* روابط ولمسات */
+
     --surface: #ffffff;
     --bg: #f1f5f9;
 }
@@ -24,7 +25,7 @@
     flex-direction: column;
 }
 
-/* أعلى/أسفل فارغين (لو محتاجهم لاحقاً) */
+/* أعلى/أسفل فارغين */
 .student-auth-top,
 .student-auth-bottom {
     height: 0;
@@ -36,12 +37,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 26px 14px;
+    padding: 18px 10px; /* أقل فراغ حول الكارد */
 }
 
 /* الكارد */
 .student-auth-card {
-    width: min(420px, 96vw);
+    width: min(520px, 98vw); /* أعرض على كل الشاشات */
     border-radius: var(--card-radius);
     background: var(--surface);
     box-shadow: var(--shadow);
@@ -49,17 +50,17 @@
     border: 1px solid rgba(15, 23, 42, .05);
 }
 
-/* هيدر بنفس فكرة الصورة + الخلفية صورة back.png */
+/* هيدر */
 .auth-header {
     height: 210px;
     position: relative;
-    background: linear-gradient(0deg, rgba(0,0,0,.05), rgba(0,0,0,.05)), url("/images/mainlogo.gif");
+    background: linear-gradient(0deg, rgba(0,0,0,.05), rgba(0,0,0,.05)), url("/images/mainlogo.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-    /* طبقة لطيفة للنص */
+    /* طبقة للنص */
     .auth-header::after {
         content: "";
         position: absolute;
@@ -91,7 +92,7 @@
 
 /* جسم الفورم */
 .student-auth-body {
-    padding: 18px 22px 20px;
+    padding: 18px 18px 20px; /* أقل شوي، ويخلي الحقول أقرب لحواف الكارد */
 }
 
 /* الحقول */
@@ -118,30 +119,31 @@
         }
 
         .field input:focus {
-            border-color: rgba(13,148,136,.55);
-            box-shadow: 0 0 0 4px rgba(13,148,136,.12);
+            border-color: rgba(59,130,246,.55);
+            box-shadow: 0 0 0 4px rgba(59,130,246,.12);
         }
 
-/* زر "إظهار" داخل حقل الباسورد */
+/* زر "إظهار" داخل حقل كلمة المرور */
 .field-action {
     position: absolute;
-    left: 10px; /* لأن RTL */
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     height: 34px;
     padding: 0 12px;
-    border: 1px solid rgba(15, 118, 110, .25);
-    background: rgba(15, 118, 110, .08);
-    color: #0f766e;
+    border: 1px solid rgba(96,165,250,.30);
+    background: rgba(96,165,250,.12);
+    color: #2563eb;
     border-radius: 10px;
     font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
     transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
 
     .field-action:hover {
-        background: rgba(15, 118, 110, .12);
-        border-color: rgba(15, 118, 110, .35);
+        background: rgba(96,165,250,.18);
+        border-color: rgba(96,165,250,.42);
     }
 
     .field-action:active {
@@ -158,9 +160,9 @@
     background: var(--primary);
     color: #fff;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 10px 22px rgba(22, 101, 52, .22);
+    box-shadow: 0 10px 22px rgba(59,130,246,.22);
     transition: transform .12s ease, filter .12s ease;
 }
 
@@ -194,7 +196,7 @@
 .note-open {
     cursor: pointer;
     color: var(--primary-2);
-    font-weight: 700;
+    font-weight: 800;
     user-select: none;
 }
 
@@ -207,7 +209,6 @@
     display: block;
 }
 
-/* خلفية المودال */
 .note-backdrop {
     position: fixed;
     inset: 0;
@@ -215,13 +216,12 @@
     z-index: 1000;
 }
 
-/* صندوق المودال */
 .note-dialog {
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: min(420px, 92vw);
+    width: min(520px, 92vw);
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 22px 60px rgba(2,6,23,.25);
@@ -240,7 +240,7 @@
 }
 
 .note-title {
-    font-weight: 800;
+    font-weight: 900;
     color: var(--text);
 }
 
@@ -274,8 +274,8 @@
     }
 
         .note-dialog-body textarea:focus {
-            border-color: rgba(13,148,136,.55);
-            box-shadow: 0 0 0 4px rgba(13,148,136,.12);
+            border-color: rgba(59,130,246,.55);
+            box-shadow: 0 0 0 4px rgba(59,130,246,.12);
         }
 
 .note-btn {
@@ -286,8 +286,9 @@
     border-radius: 12px;
     background: var(--primary-2);
     color: #fff;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
+    box-shadow: 0 10px 22px rgba(96,165,250,.18);
     transition: transform .12s ease, filter .12s ease;
 }
 
@@ -299,8 +300,21 @@
         transform: translateY(1px);
     }
 
-/* موبايل */
-@media (max-width: 420px) {
+/* موبايل: خلي الكارد يملأ الشاشة أكثر */
+@media (max-width: 520px) {
+    .student-auth-page {
+        padding: 10px 6px;
+    }
+
+    .student-auth-card {
+        width: 100vw; /* يملا عرض الهاتف */
+        border-radius: 18px;
+    }
+
+    .student-auth-body {
+        padding: 16px 14px 18px;
+    }
+
     .auth-header {
         height: 190px;
     }
@@ -308,8 +322,20 @@
     .auth-header-content {
         padding: 22px 18px;
     }
+}
 
-    .student-auth-body {
-        padding: 16px 18px 18px;
+/* شاشات صغيرة جدًا */
+@media (max-width: 360px) {
+    .student-auth-card {
+        border-radius: 16px;
+    }
+
+    .field input {
+        height: 46px;
+        font-size: 14px;
+    }
+
+    .primary-btn {
+        height: 46px;
     }
 }

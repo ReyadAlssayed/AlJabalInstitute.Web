@@ -1,6 +1,5 @@
-using AlJabalInstitute.Web.Components;
-using AlJabalInstitute.Web.Services;
-using AlJabalInstitute.Web.Services;
+﻿using AlJabalInstitute.Web.Components;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +7,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<DataServices>();
-builder.Services.AddRadzenComponents();
+// ✅ Auth Cookie
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/";
+        options.AccessDeniedPath = "/not-found";
+        options.Cookie.Name = "AlJabal.Student.Auth";
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
 
+builder.Services.AddAuthorization();
+
+// ✅ خدماتك
+builder.Services.AddRadzenComponents();
 
 var app = builder.Build();
 
@@ -22,9 +33,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+// ✅ مهم جدًا
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
