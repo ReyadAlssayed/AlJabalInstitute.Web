@@ -1,29 +1,43 @@
 ﻿using AlJabalInstitute.Web.Components;
 using AlJabalInstitute.Web.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Radzen;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// ✅ Auth Cookie
+// ===== Authentication =====
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/";
-        options.AccessDeniedPath = "/not-found";
-        options.Cookie.Name = "AlJabal.Student.Auth";
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    });
+   .AddCookie(options =>
+   {
+       options.LoginPath = "/";
+       options.AccessDeniedPath = "/not-found";
+       options.Cookie.Name = "AlJabal.Student.Auth";
+       options.Cookie.SameSite = SameSiteMode.None;
+       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+       options.SlidingExpiration = true;
+       options.ExpireTimeSpan = TimeSpan.FromDays(7);
+   });
 
 builder.Services.AddAuthorization();
+
+// ===== Needed services =====
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped(sp =>
+{
+    var nav = sp.GetRequiredService<NavigationManager>();
+    return new HttpClient { BaseAddress = new Uri(nav.BaseUri) };
+});
+
 builder.Services.AddScoped<StudentAuthService>();
-
-
-// ✅ خدماتك
+builder.Services.AddScoped<ToastService>();
 builder.Services.AddRadzenComponents();
 
 var app = builder.Build();
@@ -37,13 +51,46 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAntiforgery();
 
-// ✅ مهم جدًا
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ✅ هذا السطر لازم ومهم
+app.UseAntiforgery();
+
+// ===== Login API (مستثنى من Anti-Forgery) =====
+app.MapPost("/api/student/login",
+    [IgnoreAntiforgeryToken] async (HttpContext http, StudentAuthService auth, StudentLoginDto dto) =>
+    {
+        var result = await auth.Login(dto.NationalId, dto.Password);
+
+        if (!result.Success || result.StudentId == null)
+            return Results.BadRequest(result.Message);
+
+        var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, result.StudentId.Value.ToString()),
+        new Claim(ClaimTypes.Name, result.StudentName ?? "")
+    };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await http.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+            });
+
+        return Results.Ok();
+    });
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+public record StudentLoginDto(string NationalId, string Password);

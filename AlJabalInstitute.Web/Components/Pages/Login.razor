@@ -1,9 +1,14 @@
 ﻿@page "/"
-@using AlJabalInstitute.Web.Services
 @layout AuthLayout
 @rendermode InteractiveServer
+
+@using System.Net.Http.Json
+@using AlJabalInstitute.Web.Services
+
 @inject NavigationManager Nav
-@inject StudentAuthService AuthService
+@inject ToastService ToastSvc
+@inject IJSRuntime JS
+
 
 <div class="student-auth-shell">
 
@@ -43,11 +48,6 @@
                     تسجيل الدخول
                 </button>
 
-                @if (!string.IsNullOrEmpty(Error))
-                {
-                    <p style="color:red;margin-top:10px">@Error</p>
-                }
-
             </div>
         </div>
     </div>
@@ -57,28 +57,32 @@
 @code {
     string NationalId = "";
     string Password = "";
-    string Error = "";
 
     bool ShowPassword = false;
 
     string PasswordInputType => ShowPassword ? "text" : "password";
     string PasswordToggleText => ShowPassword ? "إخفاء" : "إظهار";
 
-    void TogglePassword()
-        => ShowPassword = !ShowPassword;
+    void TogglePassword() => ShowPassword = !ShowPassword;
 
     async Task DoLogin()
     {
-        Error = "";
+        var r = await JS.InvokeAsync<LoginJsResult>("studentLogin", NationalId, Password);
 
-        var result = await AuthService.Login(NationalId, Password);
-
-        if (!result.Success)
+        if (!r.ok)
         {
-            Error = result.Message;
+            ToastSvc.Error(string.IsNullOrWhiteSpace(r.text) ? "بيانات الدخول غير صحيحة" : r.text);
             return;
         }
 
-        Nav.NavigateTo("/Student/Home");
+        ToastSvc.Success("تم تسجيل الدخول بنجاح");
+        Nav.NavigateTo("/Student/Home", true);
     }
+
+    public class LoginJsResult
+    {
+        public bool ok { get; set; }
+        public string? text { get; set; }
+    }
+
 }

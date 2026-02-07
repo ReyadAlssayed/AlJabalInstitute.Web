@@ -1,9 +1,6 @@
 ﻿using AlJabalInstitute.Web.Models;
 using Microsoft.Extensions.Configuration;
 using Supabase;
-using AlJabalInstitute.Web.Models; // يحتوي على Model Student
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlJabalInstitute.Web.Services
 {
@@ -17,13 +14,9 @@ namespace AlJabalInstitute.Web.Services
             _config = config;
         }
 
-        // =========================
-        // Init Supabase
-        // =========================
         private async Task EnsureClientAsync()
         {
-            if (_client != null)
-                return;
+            if (_client != null) return;
 
             var url = _config["Supabase:Url"];
             var key = _config["Supabase:Key"];
@@ -32,9 +25,6 @@ namespace AlJabalInstitute.Web.Services
             await _client.InitializeAsync();
         }
 
-        // =========================
-        // LOGIN
-        // =========================
         public async Task<LoginResult> Login(string nationalId, string password)
         {
             if (string.IsNullOrWhiteSpace(nationalId) ||
@@ -49,7 +39,6 @@ namespace AlJabalInstitute.Web.Services
 
             await EnsureClientAsync();
 
-            // 🔍 جلب الطالب بالرقم الوطني
             var res = await _client!
                 .From<Student>()
                 .Where(s => s.NationalId == nationalId)
@@ -58,28 +47,13 @@ namespace AlJabalInstitute.Web.Services
 
             var student = res.Models.FirstOrDefault();
 
-            // ❌ غير موجود أو غير مفعل
             if (student == null || !student.IsActive)
-            {
-                return new LoginResult
-                {
-                    Success = false,
-                    Message = "بيانات الدخول غير صحيحة"
-                };
-            }
+                return new LoginResult { Success = false, Message = "بيانات الدخول غير صحيحة" };
 
-            // ❌ كلمة السر خاطئة
             if (string.IsNullOrWhiteSpace(student.Password) ||
                 !BCrypt.Net.BCrypt.Verify(password, student.Password))
-            {
-                return new LoginResult
-                {
-                    Success = false,
-                    Message = "بيانات الدخول غير صحيحة"
-                };
-            }
+                return new LoginResult { Success = false, Message = "بيانات الدخول غير صحيحة" };
 
-            // ✅ تحديث آخر تسجيل دخول
             student.LastLoginAt = DateTime.UtcNow;
 
             await _client!
@@ -88,7 +62,6 @@ namespace AlJabalInstitute.Web.Services
                 .Set(s => s.LastLoginAt, student.LastLoginAt)
                 .Update();
 
-            // ✅ نجاح
             return new LoginResult
             {
                 Success = true,

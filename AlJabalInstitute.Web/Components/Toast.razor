@@ -1,0 +1,119 @@
+﻿@implements IDisposable
+@using AlJabalInstitute.Web.Services
+@inject ToastService ToastSvc
+@rendermode InteractiveServer
+
+@if (Visible)
+{
+    <div class="toast-box @(IsError ? "toast-error" : "toast-success")">
+        @Message
+    </div>
+}
+
+<style>
+    /* ===== TOAST BASE ===== */
+    .toast-box {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 320px;
+        max-width: 520px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        font-weight: 700;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06);
+        z-index: 9999;
+        animation: toast-slide-down 0.35s ease-out;
+        direction: rtl;
+    }
+
+    /* ===== SUCCESS ===== */
+    .toast-success {
+        background: linear-gradient(135deg, #dcfce7 0%, #ffffff 55%, #f0fdf4 100%);
+        color: #14532d;
+    }
+
+        .toast-success::before {
+            content: "✓";
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow: 0 6px 14px rgba(34, 197, 94, 0.35);
+            flex: 0 0 auto;
+        }
+
+    /* ===== ERROR ===== */
+    .toast-error {
+        background: linear-gradient(135deg, #fee2e2 0%, #ffffff 55%, #fff1f2 100%);
+        color: #7f1d1d;
+    }
+
+        .toast-error::before {
+            content: "✕";
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);
+            flex: 0 0 auto;
+        }
+
+    @@keyframes toast-slide-down {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 24px;
+        }
+    }
+</style>
+
+@code {
+    private bool Visible;
+    private string Message = "";
+    private bool IsError;
+
+    protected override void OnInitialized()
+    {
+        ToastSvc.OnShow += HandleShow;
+    }
+
+    private async void HandleShow(string message, int ms, ToastType type)
+    {
+        Message = message;
+        IsError = type == ToastType.Error;
+
+        Visible = true;
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Delay(ms);
+
+        Visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ToastSvc.OnShow -= HandleShow;
+    }
+}

@@ -8,16 +8,25 @@
     --border: #e5e7eb;
     --muted: #64748b;
     --text: #0f172a;
-    /* 🔵 أزرق أهدأ (أخف من السابق) */
-    --primary: #3b82f6; /* زر تسجيل الدخول */
-    --primary-2: #60a5fa; /* روابط ولمسات */
-
+    --primary: #3b82f6;
+    --primary-2: #60a5fa;
     --surface: #ffffff;
     --bg: #f1f5f9;
 }
+
+/* إخفاء أيقونة العين الافتراضية في Edge/IE */
 input::-ms-reveal,
 input::-ms-clear {
     display: none;
+}
+
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
 }
 
 /* الصفحة */
@@ -41,12 +50,12 @@ input::-ms-clear {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px 10px; /* أقل فراغ حول الكارد */
+    padding: 18px 10px;
 }
 
 /* الكارد */
 .student-auth-card {
-    width: min(520px, 98vw); /* أعرض على كل الشاشات */
+    width: min(520px, 98vw);
     border-radius: var(--card-radius);
     background: var(--surface);
     box-shadow: var(--shadow);
@@ -96,25 +105,28 @@ input::-ms-clear {
 
 /* جسم الفورم */
 .student-auth-body {
-    padding: 18px 18px 20px; /* أقل شوي، ويخلي الحقول أقرب لحواف الكارد */
+    padding: 18px 18px 20px;
 }
 
-/* الحقول */
+/* =========================
+   FIELDS (Responsive for all screens)
+   ========================= */
 .field {
     position: relative;
     margin-top: 14px;
+    max-width: 520px; /* ✅ عرض ثابت للحقول بكل الشاشات */
+    margin-left: auto;
+    margin-right: auto;
 }
+
     .field input,
     .primary-btn {
-        max-width: 420px;
-        margin-left: auto;
-        margin-right: auto;
+        width: 100%;
         display: block;
     }
 
-
+    /* input */
     .field input {
-        width: 100%;
         height: 48px;
         border: 1px solid var(--border);
         border-radius: 12px;
@@ -135,10 +147,16 @@ input::-ms-clear {
             box-shadow: 0 0 0 4px rgba(59,130,246,.12);
         }
 
+        /* مساحة لزر إظهار داخل حقل كلمة المرور */
+        .field input[type="password"],
+        .field input[type="text"] {
+            padding-left: 90px;
+        }
+
 /* زر "إظهار" داخل حقل كلمة المرور */
 .field-action {
     position: absolute;
-    left: -10px;
+    left: 8px; /* ✅ داخل الحقل */
     top: 50%;
     transform: translateY(-50%);
     height: 34px;
@@ -164,7 +182,6 @@ input::-ms-clear {
 
 /* زر الدخول */
 .primary-btn {
-    width: 100%;
     height: 48px;
     margin-top: 18px;
     border: none;
@@ -319,7 +336,7 @@ input::-ms-clear {
     }
 
     .student-auth-card {
-        width: 100vw; /* يملا عرض الهاتف */
+        width: 100vw;
         border-radius: 18px;
     }
 
@@ -334,14 +351,19 @@ input::-ms-clear {
     .auth-header-content {
         padding: 22px 18px;
     }
-}
-.field {
-    position: relative;
-    max-width: 420px; /* نفس عرض الحقول */
-    margin-left: auto;
-    margin-right: auto;
-}
 
+    /* زر الإظهار أصغر على الموبايل */
+    .field input[type="password"],
+    .field input[type="text"] {
+        padding-left: 82px;
+    }
+
+    .field-action {
+        height: 32px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
 
 /* شاشات صغيرة جدًا */
 @media (max-width: 360px) {

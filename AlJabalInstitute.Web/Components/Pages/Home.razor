@@ -1,6 +1,19 @@
 ﻿@page "/Student/Home"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
 
-<h1>الحمد لله</h1>
-@code{
+<h1>مرحبًا @StudentName</h1>
 
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+    string StudentName = "طالب";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateTask;
+        StudentName = authState.User.Identity?.Name ?? "طالب";
+    }
 }
