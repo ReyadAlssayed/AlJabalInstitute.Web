@@ -15,6 +15,10 @@
     --surface: #ffffff;
     --bg: #f1f5f9;
 }
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
 
 /* الصفحة */
 .student-auth-shell {
@@ -100,6 +104,14 @@
     position: relative;
     margin-top: 14px;
 }
+    .field input,
+    .primary-btn {
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
 
     .field input {
         width: 100%;
@@ -126,7 +138,7 @@
 /* زر "إظهار" داخل حقل كلمة المرور */
 .field-action {
     position: absolute;
-    left: 10px;
+    left: -10px;
     top: 50%;
     transform: translateY(-50%);
     height: 34px;
@@ -323,6 +335,13 @@
         padding: 22px 18px;
     }
 }
+.field {
+    position: relative;
+    max-width: 420px; /* نفس عرض الحقول */
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 /* شاشات صغيرة جدًا */
 @media (max-width: 360px) {

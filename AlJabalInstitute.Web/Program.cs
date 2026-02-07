@@ -1,4 +1,5 @@
 ﻿using AlJabalInstitute.Web.Components;
+using AlJabalInstitute.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Radzen;
 
@@ -19,6 +20,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<StudentAuthService>();
+
 
 // ✅ خدماتك
 builder.Services.AddRadzenComponents();

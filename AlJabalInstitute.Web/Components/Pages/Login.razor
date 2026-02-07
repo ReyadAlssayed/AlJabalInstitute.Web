@@ -1,13 +1,15 @@
 ﻿@page "/"
+@using AlJabalInstitute.Web.Services
 @layout AuthLayout
 @rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject StudentAuthService AuthService
 
 <div class="student-auth-shell">
 
-    <div class="student-auth-top"></div>
-
     <div class="student-auth-page">
         <div class="student-auth-card">
+
             <div class="auth-header">
                 <div class="auth-header-content">
                     <h1>الجبل العالي</h1>
@@ -17,40 +19,66 @@
             <div class="student-auth-body">
 
                 <div class="field">
-                    <input placeholder="أدخل الرقم الوطني" inputmode="numeric" maxlength="20" />
+                    <input placeholder="أدخل الرقم الوطني"
+                           inputmode="numeric"
+                           maxlength="20"
+                           @bind="NationalId" />
                 </div>
 
                 <div class="field">
-                    <input type="password" placeholder="أدخل كلمة السر" maxlength="50" />
-                    <button type="button" class="field-action">إظهار</button>
+                    <input type="@PasswordInputType"
+                           placeholder="أدخل كلمة السر"
+                           maxlength="50"
+                           @bind="Password" />
+
+                    <button type="button"
+                            class="field-action"
+                            @onclick="TogglePassword">
+                        @PasswordToggleText
+                    </button>
                 </div>
 
-                <button class="primary-btn">تسجيل الدخول</button>
+                <button class="primary-btn"
+                        @onclick="DoLogin">
+                    تسجيل الدخول
+                </button>
 
-                <div class="note-link-wrap">
-                    <span class="note-hint">هل واجهتك مشكلة؟</span>
-                    <input id="noteToggle" class="note-toggle" type="checkbox" />
-                    <label class="note-open" for="noteToggle">إرسال ملاحظة</label>
-
-                    <div class="note-modal">
-                        <label class="note-backdrop" for="noteToggle"></label>
-                        <div class="note-dialog" role="dialog" aria-modal="true">
-                            <div class="note-dialog-head">
-                                <div class="note-title">إرسال ملاحظة</div>
-                                <label class="note-close" for="noteToggle" aria-label="إغلاق">×</label>
-                            </div>
-                            <div class="note-dialog-body">
-                                <textarea placeholder="اكتب ملاحظتك هنا ..." rows="4"></textarea>
-                                <button type="button" class="note-btn">إرسال</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @if (!string.IsNullOrEmpty(Error))
+                {
+                    <p style="color:red;margin-top:10px">@Error</p>
+                }
 
             </div>
         </div>
     </div>
 
-    <div class="student-auth-bottom"></div>
-
 </div>
+
+@code {
+    string NationalId = "";
+    string Password = "";
+    string Error = "";
+
+    bool ShowPassword = false;
+
+    string PasswordInputType => ShowPassword ? "text" : "password";
+    string PasswordToggleText => ShowPassword ? "إخفاء" : "إظهار";
+
+    void TogglePassword()
+        => ShowPassword = !ShowPassword;
+
+    async Task DoLogin()
+    {
+        Error = "";
+
+        var result = await AuthService.Login(NationalId, Password);
+
+        if (!result.Success)
+        {
+            Error = result.Message;
+            return;
+        }
+
+        Nav.NavigateTo("/Student/Home");
+    }
+}
