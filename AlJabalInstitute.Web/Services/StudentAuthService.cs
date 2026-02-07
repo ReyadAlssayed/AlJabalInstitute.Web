@@ -1,6 +1,10 @@
 ﻿using AlJabalInstitute.Web.Models;
 using Microsoft.Extensions.Configuration;
 using Supabase;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AlJabalInstitute.Web.Services
 {
@@ -68,6 +72,28 @@ namespace AlJabalInstitute.Web.Services
                 StudentId = student.Id,
                 StudentName = student.FullName
             };
+        }
+
+        // ✅ جديد: جلب فصول الطالب (مرتبة)
+        public async Task<List<StudentSemesterCard>> GetStudentSemestersAsync(Guid studentId)
+        {
+            await EnsureClientAsync();
+
+            var res = await _client!
+                .From<StudentAcademicViewLite>()
+                .Where(x => x.StudentId == studentId)
+                .Get();
+
+            return res.Models
+                .Select(x => new StudentSemesterCard
+                {
+                    StudentSemesterId = x.StudentSemesterId,
+                    StudentId = x.StudentId,
+                    SemesterName = x.SemesterName ?? "",
+                    StartDate = x.StartDate
+                })
+                .OrderByDescending(x => x.StartDate)
+                .ToList();
         }
     }
 }

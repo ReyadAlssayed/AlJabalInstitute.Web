@@ -1,19 +1,88 @@
 ﻿@page "/Student/Home"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using AlJabalInstitute.Web.Services
+@using AlJabalInstitute.Web.Models
 @attribute [Authorize]
 
-<h1>مرحبًا @StudentName</h1>
+@inject StudentAuthService SemestersSvc
+
+<div class="student-home">
+
+    <h2 class="student-title">مرحبًا @StudentName</h2>
+
+    @if (!IsReady)
+    {
+        <div class="loading">جاري تحميل الفصول...</div>
+    }
+    else if (!Semesters.Any())
+    {
+        <div class="empty">لا توجد فصول مسجلة.</div>
+    }
+    else
+    {
+        <div class="semesters-list">
+            @for (int i = 0; i < Semesters.Count; i++)
+            {
+                var sem = Semesters[i];
+
+                // ✅ الأحدث فوق => رقم الفصل = العدد - i
+                var semesterNumber = Semesters.Count - i;
+
+                // ✅ الأحدث (أول بطاقة) هي "الأخير"
+                var isLast = (i == 0);
+
+                <div class="sem-card">
+                    <div class="sem-top">
+                        <div class="sem-name">@sem.SemesterName</div>
+
+                        <div class="sem-no">
+                            الفصل @semesterNumber
+                            @if (isLast)
+                            {
+                                <span class="last-badge">الأخير</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="sem-date">
+                        @sem.StartDate.ToString("yyyy/MM/dd")
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
 
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
 
     string StudentName = "طالب";
+    bool IsReady;
+    List<StudentSemesterCard> Semesters = new();
 
     protected override async Task OnInitializedAsync()
     {
+        IsReady = false;
+
         var authState = await AuthenticationStateTask;
-        StudentName = authState.User.Identity?.Name ?? "طالب";
+        var user = authState.User;
+
+        StudentName = user.Identity?.Name ?? "طالب";
+
+        // ✅ student_id من Claim NameIdentifier اللي أنت حاطه في Program.cs
+        var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(idStr, out var studentId))
+        {
+            IsReady = true;
+            return;
+        }
+
+        Semesters = await SemestersSvc.GetStudentSemestersAsync(studentId);
+
+        IsReady = true;
     }
 }
