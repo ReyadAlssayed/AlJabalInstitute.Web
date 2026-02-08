@@ -23,17 +23,23 @@
 
             <div class="student-auth-body">
 
-                <div class="field">
+                <!-- الرقم الوطني -->
+                <div class="field national">
+                    <span class="field-icon material-symbols-outlined">badge</span>
+
                     <input placeholder="أدخل الرقم الوطني"
                            inputmode="numeric"
-                           maxlength="20"
+                           maxlength="12"
                            @bind="NationalId" />
                 </div>
 
+                <!-- كلمة السر -->
                 <div class="field">
+                    <span class="field-icon material-symbols-outlined">lock</span>
+
                     <input type="@PasswordInputType"
                            placeholder="أدخل كلمة السر"
-                           maxlength="50"
+                           maxlength="10"
                            @bind="Password" />
 
                     <button type="button"
@@ -52,6 +58,7 @@
         </div>
     </div>
 
+
 </div>
 
 @code {
@@ -67,6 +74,20 @@
 
     async Task DoLogin()
     {
+        // ✅ الرقم الوطني = 12 رقم بالضبط
+        if (NationalId.Length != 12 || !NationalId.All(char.IsDigit))
+        {
+            ToastSvc.Error("الرقم الوطني يجب أن يكون 12 رقمًا");
+            return;
+        }
+
+        // ✅ كلمة السر: من 1 إلى 10
+        if (Password.Length == 0 || Password.Length > 10)
+        {
+            ToastSvc.Error("كلمة السر يجب ألا تتجاوز 10 أحرف");
+            return;
+        }
+
         var r = await JS.InvokeAsync<LoginJsResult>("studentLogin", NationalId, Password);
 
         if (!r.ok)

@@ -1,32 +1,15 @@
 ﻿using AlJabalInstitute.Web.Models;
-using Microsoft.Extensions.Configuration;
 using Supabase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlJabalInstitute.Web.Services
 {
     public class StudentAuthService
     {
-        private readonly IConfiguration _config;
-        private Client? _client;
+        private readonly Client _client;
 
-        public StudentAuthService(IConfiguration config)
+        public StudentAuthService(Client client)
         {
-            _config = config;
-        }
-
-        private async Task EnsureClientAsync()
-        {
-            if (_client != null) return;
-
-            var url = _config["Supabase:Url"];
-            var key = _config["Supabase:Key"];
-
-            _client = new Client(url!, key!);
-            await _client.InitializeAsync();
+            _client = client;
         }
 
         public async Task<LoginResult> Login(string nationalId, string password)
@@ -41,9 +24,7 @@ namespace AlJabalInstitute.Web.Services
                 };
             }
 
-            await EnsureClientAsync();
-
-            var res = await _client!
+            var res = await _client
                 .From<Student>()
                 .Where(s => s.NationalId == nationalId)
                 .Limit(1)
@@ -60,7 +41,7 @@ namespace AlJabalInstitute.Web.Services
 
             student.LastLoginAt = DateTime.UtcNow;
 
-            await _client!
+            await _client
                 .From<Student>()
                 .Where(s => s.Id == student.Id)
                 .Set(s => s.LastLoginAt, student.LastLoginAt)
@@ -74,12 +55,9 @@ namespace AlJabalInstitute.Web.Services
             };
         }
 
-        // ✅ جديد: جلب فصول الطالب (مرتبة)
         public async Task<List<StudentSemesterCard>> GetStudentSemestersAsync(Guid studentId)
         {
-            await EnsureClientAsync();
-
-            var res = await _client!
+            var res = await _client
                 .From<StudentAcademicViewLite>()
                 .Where(x => x.StudentId == studentId)
                 .Get();

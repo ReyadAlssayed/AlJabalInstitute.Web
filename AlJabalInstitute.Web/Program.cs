@@ -27,6 +27,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
    });
 
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<Supabase.Client>(sp =>
+{
+    var cfg = sp.GetRequiredService<IConfiguration>();
+
+    var url = cfg["Supabase:Url"]!;
+    var key = cfg["Supabase:Key"]!;
+
+    var client = new Supabase.Client(url, key);
+    client.InitializeAsync().GetAwaiter().GetResult(); // مرة واحدة فقط
+    return client;
+});
+
 
 // ===== Needed services =====
 builder.Services.AddHttpContextAccessor();
