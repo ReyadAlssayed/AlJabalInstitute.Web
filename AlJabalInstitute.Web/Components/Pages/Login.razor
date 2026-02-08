@@ -9,7 +9,6 @@
 @inject ToastService ToastSvc
 @inject IJSRuntime JS
 
-
 <div class="student-auth-shell">
 
     <div class="student-auth-page">
@@ -30,7 +29,8 @@
                     <input placeholder="أدخل الرقم الوطني"
                            inputmode="numeric"
                            maxlength="12"
-                           @bind="NationalId" />
+                           @bind="NationalId"
+                           disabled="@IsSubmitting" />
                 </div>
 
                 <!-- كلمة السر -->
@@ -40,24 +40,26 @@
                     <input type="@PasswordInputType"
                            placeholder="أدخل كلمة السر"
                            maxlength="10"
-                           @bind="Password" />
+                           @bind="Password"
+                           disabled="@IsSubmitting" />
 
                     <button type="button"
                             class="field-action"
-                            @onclick="TogglePassword">
+                            @onclick="TogglePassword"
+                            disabled="@IsSubmitting">
                         @PasswordToggleText
                     </button>
                 </div>
 
                 <button class="primary-btn"
+                        disabled="@IsSubmitting"
                         @onclick="DoLogin">
-                    تسجيل الدخول
+                    @(IsSubmitting ? "جاري تسجيل الدخول..." : "تسجيل الدخول")
                 </button>
 
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -66,38 +68,68 @@
     string Password = "";
 
     bool ShowPassword = false;
+    bool IsSubmitting = false; // ✅ مفتاح القفل
 
     string PasswordInputType => ShowPassword ? "text" : "password";
     string PasswordToggleText => ShowPassword ? "إخفاء" : "إظهار";
 
-    void TogglePassword() => ShowPassword = !ShowPassword;
+    void TogglePassword()
+    {
+        if (IsSubmitting) return;
+        ShowPassword = !ShowPassword;
+    }
 
     async Task DoLogin()
     {
-        // ✅ الرقم الوطني = 12 رقم بالضبط
+        if (IsSubmitting)
+            return; // ⛔ منع أي ضغط إضافي
+
+        IsSubmitting = true;
+
+        // ✅ الرقم الوطني = 12 رقم
         if (NationalId.Length != 12 || !NationalId.All(char.IsDigit))
         {
             ToastSvc.Error("الرقم الوطني يجب أن يكون 12 رقمًا");
+            IsSubmitting = false;
             return;
         }
 
-        // ✅ كلمة السر: من 1 إلى 10
+        // ✅ كلمة السر ≤ 10
         if (Password.Length == 0 || Password.Length > 10)
         {
             ToastSvc.Error("كلمة السر يجب ألا تتجاوز 10 أحرف");
+            IsSubmitting = false;
             return;
         }
 
-        var r = await JS.InvokeAsync<LoginJsResult>("studentLogin", NationalId, Password);
-
-        if (!r.ok)
+        try
         {
-            ToastSvc.Error(string.IsNullOrWhiteSpace(r.text) ? "بيانات الدخول غير صحيحة" : r.text);
-            return;
-        }
+            var r = await JS.InvokeAsync<LoginJsResult>(
+                "studentLogin",
+                NationalId,
+                Password
+            );
 
-        ToastSvc.Success("تم تسجيل الدخول بنجاح");
-        Nav.NavigateTo("/Student/Home", true);
+            if (!r.ok)
+            {
+                ToastSvc.Error(
+                    string.IsNullOrWhiteSpace(r.text)
+                        ? "بيانات الدخول غير صحيحة"
+                        : r.text
+                );
+
+                IsSubmitting = false; // 🔁 فشل → افتح الزر
+                return;
+            }
+
+            ToastSvc.Success("تم تسجيل الدخول بنجاح");
+            Nav.NavigateTo("/Student/Home", true);
+        }
+        catch
+        {
+            ToastSvc.Error("حدث خطأ غير متوقع");
+            IsSubmitting = false;
+        }
     }
 
     public class LoginJsResult
@@ -105,5 +137,4 @@
         public bool ok { get; set; }
         public string? text { get; set; }
     }
-
 }
