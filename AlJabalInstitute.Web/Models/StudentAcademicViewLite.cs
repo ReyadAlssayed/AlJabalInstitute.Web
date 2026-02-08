@@ -18,5 +18,15 @@ namespace AlJabalInstitute.Web.Models
 
         [Column("start_date")]
         public DateTime StartDate { get; set; }
+
+        // ✅ جديد للواجهة
+        [Column("is_result_visible")]
+        public bool IsResultVisible { get; set; }
+
+        [Column("is_financially_exempt")]
+        public bool IsFinanciallyExempt { get; set; }
+
+        [Column("remaining_amount")]
+        public decimal RemainingAmount { get; set; }
     }
 }

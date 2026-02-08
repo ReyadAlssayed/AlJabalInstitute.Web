@@ -25,46 +25,79 @@
     }
     else
     {
-        <div class="semesters-list">
+        <div class="semesters-grid">
             @for (int i = 0; i < Semesters.Count; i++)
             {
                 var sem = Semesters[i];
 
-                // ✅ الأحدث فوق => رقم الفصل = العدد - i
+                // الأحدث فوق => رقم الفصل = العدد - i
                 var semesterNumber = Semesters.Count - i;
 
-                // ✅ الأحدث (أول بطاقة) هي "الأخير"
+                // الأحدث (أول بطاقة) هي "الأخير"
                 var isLast = (i == 0);
 
                 <div class="sem-card">
-                    <div class="sem-top">
-                        <div class="sem-name">@sem.SemesterName</div>
 
-                        <div class="sem-no">
-                            الفصل @semesterNumber
+                    <!-- TOP STRIP -->
+                    <div class="sem-strip">
+                        <div class="sem-strip-title">@sem.SemesterName</div>
+
+                        <div class="sem-badges">
+                            <span class="sem-num">@semesterNumber</span>
+
                             @if (isLast)
                             {
-                                <span class="last-badge">الأخير لك</span>
+                                <span class="sem-last">الأخير لك</span>
                             }
                         </div>
                     </div>
 
-                    <div class="sem-actions">
-                        <button class="sem-btn sem-btn-fin"
-                                @onclick="() => GoFinance(sem.StudentSemesterId)">
-                            تفاصيل مالية
-                        </button>
+                    <!-- BODY -->
+                    <div class="sem-body">
 
-                        <button class="sem-btn sem-btn-ac"
-                                @onclick="() => GoAcademic(sem.StudentSemesterId)">
-                             نتيجة الفصل
-                        </button>
+                        <div class="sem-status">
+                            <div class="status-row">
+                                <span class="status-label">النتيجة:</span>
+                                <span class="status-pill @(sem.IsResultVisible ? "ok" : "warn")">
+                                    @(sem.IsResultVisible ? "مرئية" : "محجوبة")
+                                </span>
+                            </div>
+
+                            <div class="status-row">
+                                <span class="status-label">المالية:</span>
+
+                                @if (sem.IsFinanciallyExempt)
+                                {
+                                    <span class="status-pill info">معفي</span>
+                                }
+                                else if (sem.RemainingAmount <= 0)
+                                {
+                                    <span class="status-pill ok">خالص</span>
+                                }
+                                else
+                                {
+                                    <span class="status-pill warn">غير خالص</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="sem-actions">
+                            <button class="sem-btn sem-btn-fin"
+                                    @onclick="() => GoFinance(sem.StudentSemesterId)">
+                                تفاصيل مالية
+                            </button>
+
+                            <button class="sem-btn sem-btn-ac"
+                                    @onclick="() => GoAcademic(sem.StudentSemesterId)">
+                                تفاصيل أكاديمية
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             }
         </div>
     }
-
 </div>
 
 @code {

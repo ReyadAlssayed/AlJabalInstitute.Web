@@ -8,5 +8,10 @@ namespace AlJabalInstitute.Web.Models
         public Guid StudentId { get; set; }
         public string SemesterName { get; set; } = "";
         public DateTime StartDate { get; set; }
+
+        // ✅ جديد للواجهة
+        public bool IsResultVisible { get; set; }
+        public bool IsFinanciallyExempt { get; set; }
+        public decimal RemainingAmount { get; set; }
     }
 }

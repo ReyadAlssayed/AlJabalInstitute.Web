@@ -68,10 +68,16 @@ namespace AlJabalInstitute.Web.Services
                     StudentSemesterId = x.StudentSemesterId,
                     StudentId = x.StudentId,
                     SemesterName = x.SemesterName ?? "",
-                    StartDate = x.StartDate
+                    StartDate = x.StartDate,
+
+                    // ✅ الحقول الجديدة
+                    IsResultVisible = x.IsResultVisible,
+                    IsFinanciallyExempt = x.IsFinanciallyExempt,
+                    RemainingAmount = x.RemainingAmount
                 })
                 .OrderByDescending(x => x.StartDate)
                 .ToList();
         }
+
     }
 }
