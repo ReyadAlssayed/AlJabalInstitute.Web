@@ -7,10 +7,13 @@
 @attribute [Authorize]
 
 @inject StudentAuthService SemestersSvc
+@inject NavigationManager Nav
 
 <div class="student-home">
 
-    <h2 class="student-title">مرحبًا @StudentName</h2>
+    <div class="student-header">
+        <h2 class="student-title">مرحبًا @StudentName</h2>
+    </div>
 
     @if (!IsReady)
     {
@@ -41,13 +44,21 @@
                             الفصل @semesterNumber
                             @if (isLast)
                             {
-                                <span class="last-badge">الأخير</span>
+                                <span class="last-badge">الأخير لك</span>
                             }
                         </div>
                     </div>
 
-                    <div class="sem-date">
-                        @sem.StartDate.ToString("yyyy/MM/dd")
+                    <div class="sem-actions">
+                        <button class="sem-btn sem-btn-fin"
+                                @onclick="() => GoFinance(sem.StudentSemesterId)">
+                            تفاصيل مالية
+                        </button>
+
+                        <button class="sem-btn sem-btn-ac"
+                                @onclick="() => GoAcademic(sem.StudentSemesterId)">
+                            تفاصيل أكاديمية
+                        </button>
                     </div>
                 </div>
             }
@@ -73,7 +84,6 @@
 
         StudentName = user.Identity?.Name ?? "طالب";
 
-        // ✅ student_id من Claim NameIdentifier اللي أنت حاطه في Program.cs
         var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(idStr, out var studentId))
         {
@@ -85,4 +95,10 @@
 
         IsReady = true;
     }
+
+    void GoFinance(Guid studentSemesterId)
+        => Nav.NavigateTo($"/Student/Finance/{studentSemesterId}");
+
+    void GoAcademic(Guid studentSemesterId)
+        => Nav.NavigateTo($"/Student/Academic/{studentSemesterId}");
 }
