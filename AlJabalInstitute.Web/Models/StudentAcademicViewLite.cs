@@ -19,14 +19,24 @@ namespace AlJabalInstitute.Web.Models
         [Column("start_date")]
         public DateTime StartDate { get; set; }
 
-        // ✅ جديد للواجهة
-        [Column("is_result_visible")]
-        public bool IsResultVisible { get; set; }
+        // ✅ لازم هذم لأنهم أساس الإظهار
+        [Column("is_results_published")]
+        public bool IsResultsPublished { get; set; }
 
         [Column("is_financially_exempt")]
         public bool IsFinanciallyExempt { get; set; }
 
         [Column("remaining_amount")]
         public decimal RemainingAmount { get; set; }
+
+        [Column("result_unlocked_until")]
+        public DateTime? ResultUnlockedUntil { get; set; }
+
+        // (اختياري لو تحتاجه لاحقًا)
+        [Column("final_result")]
+        public string? FinalResult { get; set; }
+
+        [Column("is_result_visible")]
+        public bool IsResultVisible { get; set; }
     }
 }

@@ -30,17 +30,29 @@
             {
                 var sem = Semesters[i];
 
-                // الأحدث فوق => رقم الفصل = العدد - i
                 var semesterNumber = Semesters.Count - i;
-
-                // الأحدث (أول بطاقة) هي "الأخير"
                 var isLast = (i == 0);
+
+                // ✅ منطق الأكاديمية مثل الإدارة
+                var isVisible = IsAcademicResultVisible(
+                sem.IsResultsPublished,
+                sem.IsFinanciallyExempt,
+                sem.RemainingAmount,
+                sem.ResultUnlockedUntil
+                );
 
                 <div class="sem-card">
 
                     <!-- TOP STRIP -->
                     <div class="sem-strip">
-                        <div class="sem-strip-title">@sem.SemesterName</div>
+                        <div class="sem-strip-title">
+                            @sem.SemesterName
+
+                            @if (!sem.IsResultsPublished)
+                            {
+                                <span class="sem-pub-badge">النتائج غير منشورة</span>
+                            }
+                        </div>
 
                         <div class="sem-badges">
                             <span class="sem-num">@semesterNumber</span>
@@ -58,9 +70,17 @@
                         <div class="sem-status">
                             <div class="status-row">
                                 <span class="status-label">النتيجة:</span>
-                                <span class="status-pill @(sem.IsResultVisible ? "ok" : "warn")">
-                                    @(sem.IsResultVisible ? "مرئية" : "محجوبة")
-                                </span>
+
+                                @if (!sem.IsResultsPublished)
+                                {
+                                    <span class="status-pill info">غير منشورة</span>
+                                }
+                                else
+                                {
+                                    <span class="status-pill @(isVisible ? "ok" : "warn")">
+                                        @(isVisible ? "مرئية" : "محجوبة")
+                                    </span>
+                                }
                             </div>
 
                             <div class="status-row">
@@ -127,6 +147,25 @@
         Semesters = await SemestersSvc.GetStudentSemestersAsync(studentId);
 
         IsReady = true;
+    }
+
+    // ✅ نفس منطق الإدارة (AcademicServices)
+    bool IsAcademicResultVisible(
+        bool isResultsPublished,
+        bool isFinanciallyExempt,
+        decimal remainingAmount,
+        DateTime? resultUnlockedUntil)
+    {
+        if (!isResultsPublished)
+            return false;
+
+        if (isFinanciallyExempt || remainingAmount == 0m)
+            return true;
+
+        if (resultUnlockedUntil != null && resultUnlockedUntil > DateTime.UtcNow)
+            return true;
+
+        return false;
     }
 
     void GoFinance(Guid studentSemesterId)

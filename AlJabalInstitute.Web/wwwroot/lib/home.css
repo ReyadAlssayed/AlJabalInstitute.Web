@@ -228,6 +228,21 @@
         filter: brightness(1.03);
     }
 
+.sem-pub-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 10px; /* RTL */
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+
+
 /* MOBILE */
 @media (max-width: 768px) {
     .student-home {

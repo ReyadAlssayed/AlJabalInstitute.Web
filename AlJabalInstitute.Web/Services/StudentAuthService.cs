@@ -70,10 +70,16 @@ namespace AlJabalInstitute.Web.Services
                     SemesterName = x.SemesterName ?? "",
                     StartDate = x.StartDate,
 
-                    // ✅ الحقول الجديدة
-                    IsResultVisible = x.IsResultVisible,
+                    // ✅ مالية
                     IsFinanciallyExempt = x.IsFinanciallyExempt,
-                    RemainingAmount = x.RemainingAmount
+                    RemainingAmount = x.RemainingAmount,
+
+                    // ✅ أكاديمية (منطق الإدارة)
+                    IsResultsPublished = x.IsResultsPublished,
+                    ResultUnlockedUntil = x.ResultUnlockedUntil,
+
+                    // (اختياري)
+                    IsResultVisible = x.IsResultVisible
                 })
                 .OrderByDescending(x => x.StartDate)
                 .ToList();
