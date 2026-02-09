@@ -152,7 +152,6 @@
     List<PaymentLite> Payments = new();
 
     string Money(decimal? v) => $"{(v ?? 0m):0.00} دينار";
-
     protected override async Task OnInitializedAsync()
     {
         IsReady = false;
@@ -170,12 +169,18 @@
             return;
         }
 
-        Header = await StudentSvc.GetStudentFinanceAsync(studentId, StudentSemesterId);
-        if (Header != null)
-            Payments = await StudentSvc.GetStudentPaymentsAsync(StudentSemesterId);
+        var headerTask = StudentSvc.GetStudentFinanceAsync(studentId, StudentSemesterId);
+        var paymentsTask = StudentSvc.GetStudentPaymentsAsync(StudentSemesterId);
+
+        await Task.WhenAll(headerTask, paymentsTask);
+
+        Header = headerTask.Result;
+        Payments = paymentsTask.Result ?? new();
 
         IsReady = true;
     }
+
+
 
     void GoBack() => Nav.NavigateTo("/Student/Home");
 }
