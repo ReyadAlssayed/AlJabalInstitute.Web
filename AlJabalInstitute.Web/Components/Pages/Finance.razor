@@ -152,10 +152,9 @@
     List<PaymentLite> Payments = new();
 
     string Money(decimal? v) => $"{(v ?? 0m):0.00} دينار";
+
     protected override async Task OnInitializedAsync()
     {
-        IsReady = false;
-
         var authState = AuthenticationStateTask != null
             ? await AuthenticationStateTask
             : await AuthProvider.GetAuthenticationStateAsync();
@@ -164,10 +163,7 @@
 
         var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(idStr, out var studentId))
-        {
-            IsReady = true;
             return;
-        }
 
         var headerTask = StudentSvc.GetStudentFinanceAsync(studentId, StudentSemesterId);
         var paymentsTask = StudentSvc.GetStudentPaymentsAsync(StudentSemesterId);
@@ -179,7 +175,6 @@
 
         IsReady = true;
     }
-
 
 
     void GoBack() => Nav.NavigateTo("/Student/Home");

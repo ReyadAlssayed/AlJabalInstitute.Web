@@ -12,6 +12,7 @@ namespace AlJabalInstitute.Web.Services
             _client = client;
         }
 
+        // ================== LOGIN ==================
         public async Task<LoginResult> Login(string nationalId, string password)
         {
             if (string.IsNullOrWhiteSpace(nationalId) || string.IsNullOrWhiteSpace(password))
@@ -69,6 +70,7 @@ namespace AlJabalInstitute.Web.Services
             }
         }
 
+        // ================== STUDENT SEMESTERS (CARDS) ==================
         public async Task<List<StudentSemesterCard>> GetStudentSemestersAsync(Guid studentId)
         {
             try
@@ -99,13 +101,11 @@ namespace AlJabalInstitute.Web.Services
             }
             catch (HttpRequestException)
             {
-                return new(); // الصفحة تعرض رسالة "لا يوجد اتصال"
+                return new();
             }
         }
 
-
         // ================== Student Finance ==================
-
         public async Task<StudentFinanceViewLite?> GetStudentFinanceAsync(Guid studentId, Guid studentSemesterId)
         {
             try
@@ -123,7 +123,6 @@ namespace AlJabalInstitute.Web.Services
                 return null;
             }
         }
-
 
         public async Task<List<PaymentLite>> GetStudentPaymentsAsync(Guid studentSemesterId)
         {
@@ -144,7 +143,97 @@ namespace AlJabalInstitute.Web.Services
             }
         }
 
+        // =====================================================================
+        // ================== NEW: STUDENT ACADEMIC (READ ONLY) =================
+        // =====================================================================
 
+        // ترجع كل سمسترات الطالب من الـ view (مرتبة الأحدث أولاً)
+        public async Task<List<StudentAcademicViewLite>> GetStudentAcademicSemestersAsync(Guid studentId)
+        {
+            try
+            {
+                var res = await _client
+                    .From<StudentAcademicViewLite>()
+                    .Where(x => x.StudentId == studentId)
+                    .Get();
 
+                return res.Models
+                    .OrderByDescending(x => x.StartDate)
+                    .ToList();
+            }
+            catch (HttpRequestException)
+            {
+                return new();
+            }
+        }
+
+        // منطق إظهار النتيجة (نفس منطق الإدارة)
+        public bool IsAcademicResultVisible(
+            bool isResultsPublished,
+            bool isFinanciallyExempt,
+            decimal remainingAmount,
+            DateTime? resultUnlockedUntil)
+        {
+            if (!isResultsPublished)
+                return false;
+
+            if (isFinanciallyExempt || remainingAmount == 0m)
+                return true;
+
+            if (resultUnlockedUntil != null && resultUnlockedUntil > DateTime.UtcNow)
+                return true;
+
+            return false;
+        }
+
+        // تجميعة جاهزة للصفحة (Header + Cards)
+        public async Task<StudentAcademicPageVM> GetStudentAcademicPageAsync(Guid studentId, Guid studentSemesterId)
+        {
+            var all = await GetStudentAcademicSemestersAsync(studentId);
+
+            var header = all.FirstOrDefault(x => x.StudentSemesterId == studentSemesterId);
+
+            var vm = new StudentAcademicPageVM
+            {
+                StudentName = header?.StudentName ?? "",
+                Header = header,
+                Semesters = new List<StudentAcademicSemesterCardVM>()
+            };
+
+            foreach (var x in all)
+            {
+                var published = x.IsResultsPublished ?? false;
+
+                vm.Semesters.Add(new StudentAcademicSemesterCardVM
+                {
+                    StudentSemesterId = x.StudentSemesterId,
+                    StudentId = x.StudentId,
+                    SemesterId = x.SemesterId,
+                    SemesterName = x.SemesterName ?? "",
+                    StartDate = x.StartDate,
+
+                    TotalSubjects = x.TotalSubjects ?? 0,
+                    PassedSubjects = x.PassedSubjects ?? 0,
+                    FailedSubjects = x.FailedSubjects ?? 0,
+                    TotalScore = x.TotalScore ?? 0m,
+                    Percentage = x.Percentage ?? 0m,
+                    FinalResult = x.FinalResult ?? "—",
+
+                    IsResultsPublished = published,
+                    IsFinanciallyExempt = x.IsFinanciallyExempt,
+                    RemainingAmount = x.RemainingAmount,
+                    ResultUnlockedUntil = x.ResultUnlockedUntil,
+
+                    IsVisible = IsAcademicResultVisible(
+                        published,
+                        x.IsFinanciallyExempt,
+                        x.RemainingAmount,
+                        x.ResultUnlockedUntil
+                    )
+                });
+            }
+
+            return vm;
+        }
     }
 }
