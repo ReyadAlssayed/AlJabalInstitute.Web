@@ -12,11 +12,6 @@
 <Toast />
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("hideAppLoader");
-        }
-    }
+    protected override Task OnAfterRenderAsync(bool firstRender)
+        => Task.CompletedTask;
 }
