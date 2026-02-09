@@ -3,10 +3,9 @@ using AlJabalInstitute.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
 using Radzen;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +19,26 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        options.LoginPath = "/";
        options.AccessDeniedPath = "/not-found";
        options.Cookie.Name = "AlJabal.Student.Auth";
-       options.Cookie.SameSite = SameSiteMode.None;
-       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
        options.SlidingExpiration = true;
        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+
+       // ✅ نشر عملي: Production = HTTPS + SameSite=None
+       // ✅ تطوير: لا نكسر cookie على localhost
+       if (builder.Environment.IsDevelopment())
+       {
+           options.Cookie.SameSite = SameSiteMode.Lax;
+           options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+       }
+       else
+       {
+           options.Cookie.SameSite = SameSiteMode.None;
+           options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+       }
    });
 
 builder.Services.AddAuthorization();
+
+// ===== Supabase Client (Singleton) =====
 builder.Services.AddSingleton<Supabase.Client>(sp =>
 {
     var cfg = sp.GetRequiredService<IConfiguration>();
@@ -38,7 +50,6 @@ builder.Services.AddSingleton<Supabase.Client>(sp =>
     client.InitializeAsync().GetAwaiter().GetResult(); // مرة واحدة فقط
     return client;
 });
-
 
 // ===== Needed services =====
 builder.Services.AddHttpContextAccessor();
@@ -67,7 +78,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ✅ هذا السطر لازم ومهم
+// ✅ مهم لطلبات POST في Blazor/Minimal APIs (ونحن مستثنين login)
 app.UseAntiforgery();
 
 // ===== Login API (مستثنى من Anti-Forgery) =====
@@ -80,10 +91,10 @@ app.MapPost("/api/student/login",
             return Results.BadRequest(result.Message);
 
         var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, result.StudentId.Value.ToString()),
-        new Claim(ClaimTypes.Name, result.StudentName ?? "")
-    };
+        {
+            new Claim(ClaimTypes.NameIdentifier, result.StudentId.Value.ToString()),
+            new Claim(ClaimTypes.Name, result.StudentName ?? "")
+        };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);

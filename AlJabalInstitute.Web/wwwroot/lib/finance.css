@@ -1,0 +1,290 @@
+﻿/* ===============================
+   STUDENT FINANCE – FINAL CLEAN CSS
+================================ */
+
+:root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e5e7eb;
+    --soft: #f1f5f9;
+    --primary: #2563eb;
+    --ok: #16a34a;
+    --warn: #b45309;
+    --info: #075985;
+    --shadow: 0 14px 38px rgba(2,6,23,.08);
+    --shadow2: 0 8px 18px rgba(2,6,23,.06);
+    --radius: 18px;
+    --radius2: 14px;
+}
+
+/* ===== Page ===== */
+.student-finance {
+    padding: 20px;
+    direction: rtl;
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+.fin-header {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.fin-header-top {
+    text-align: center;
+}
+
+.fin-kicker {
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--muted);
+}
+
+.fin-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 950;
+}
+
+.fin-sem {
+    color: var(--primary);
+}
+
+.fin-header-bottom {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#fb923c,#f97316);
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(249,115,22,.35);
+}
+
+/* ================= STATES ================= */
+.loading,
+.empty {
+    padding: 14px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    background: var(--card);
+    font-weight: 900;
+}
+
+/* ================= GRID ================= */
+.fin-cards {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 16px;
+}
+
+@media (max-width:900px) {
+    .fin-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ================= CARD ================= */
+.fin-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-weight: 950;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--soft);
+}
+
+/* ================= SUMMARY ================= */
+.fin-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--soft);
+}
+
+    .fin-row:last-child {
+        border-bottom: none;
+    }
+
+.lbl {
+    color: var(--muted);
+    font-weight: 900;
+}
+
+.val {
+    font-weight: 950;
+}
+
+    .val.ok {
+        color: var(--ok);
+    }
+
+    .val.warn {
+        color: var(--warn);
+    }
+
+/* ================= PILLS ================= */
+.pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+    .pill.ok {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .pill.warn {
+        background: #ffedd5;
+        color: #9a3412;
+    }
+
+    .pill.info {
+        background: #e0f2fe;
+        color: #075985;
+    }
+
+/* ================= PAYMENTS ================= */
+.payments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ✔ التنظيم النهائي */
+.pay-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    background: #fff;
+    box-shadow: var(--shadow2);
+}
+
+/* التاريخ والوقت – أقصى اليسار */
+.pay-date {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 130px;
+}
+
+.pay-time {
+    font-weight: 950;
+    background: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.pay-day {
+    font-weight: 900;
+    color: #334155;
+}
+
+/* التفاصيل – يمين */
+.pay-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+}
+
+.pay-note {
+    font-weight: 900;
+    color: #475569;
+}
+
+.pay-recv {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 900;
+}
+
+/* المبلغ – أقصى اليمين */
+.pay-amt {
+    min-width: 140px;
+    text-align: center;
+    font-weight: 950;
+    color: var(--primary);
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    padding: 10px;
+    border-radius: 14px;
+}
+
+.loading {
+    display: none !important;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fin-card {
+    animation: fadeUp .45s ease-out both;
+}
+
+    /* ترتيب الدخول */
+    .fin-card:nth-child(1) {
+        animation-delay: .06s;
+    }
+
+    .fin-card:nth-child(2) {
+        animation-delay: .12s;
+    }
+
+
+/* ================= MOBILE ================= */
+@media (max-width:520px) {
+    .pay-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pay-date {
+        align-items: center;
+    }
+
+    .pay-meta {
+        align-items: center;
+        text-align: center;
+    }
+
+    .pay-amt {
+        width: 100%;
+    }
+}

@@ -1,0 +1,178 @@
+﻿@page "/Student/Finance/{StudentSemesterId:guid}"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using AlJabalInstitute.Web.Services
+@using AlJabalInstitute.Web.Models
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthProvider
+@inject StudentAuthService StudentSvc
+@inject NavigationManager Nav
+@inject ToastService ToastSvc
+
+<div class="student-finance">
+
+    <div class="fin-header">
+
+        <div class="fin-header-top">
+            <div class="fin-kicker">صفحة المالية</div>
+            <h2 class="fin-title">
+                <span class="fin-sem">@((Header?.SemesterName ?? "السمستر"))</span>
+            </h2>
+        </div>
+
+        <div class="fin-header-bottom">
+            <button type="button" class="back-btn" @onclick="GoBack">
+                <span class="icon">←</span>
+                رجوع
+            </button>
+        </div>
+
+    </div>
+
+    @if (!IsReady)
+    {
+        <div class="loading">جاري تحميل البيانات...</div>
+    }
+    else if (Header == null)
+    {
+        <div class="empty">لا توجد بيانات مالية لهذا السمستر.</div>
+    }
+    else
+    {
+        <div class="fin-cards">
+
+            <!-- SUMMARY -->
+            <div class="fin-card">
+                <div class="card-title">ملخص السمستر</div>
+
+                <div class="fin-row">
+                    <span class="lbl">سعر السمستر</span>
+                    <span class="val">@Money(Header.SemesterPrice)</span>
+                </div>
+
+                <div class="fin-row">
+                    <span class="lbl">الخصم</span>
+                    <span class="val">@Money(Header.DiscountAmount)</span>
+                </div>
+
+                <div class="fin-row">
+                    <span class="lbl">المدفوع</span>
+                    <span class="val">@Money(Header.PaidAmount)</span>
+                </div>
+
+                <div class="fin-row">
+                    <span class="lbl">المتبقي</span>
+                    <span class="val @(Header.IsFinanciallyExempt || Header.RemainingAmount <= 0 ? "ok" : "warn")">
+                        @(Header.IsFinanciallyExempt ? "معفي" : Money(Header.RemainingAmount))
+                    </span>
+                </div>
+
+                <div class="fin-row">
+                    <span class="lbl">الحالة</span>
+
+                    @if (Header.IsFinanciallyExempt)
+                    {
+                        <span class="pill info">معفي</span>
+                    }
+                    else if (Header.RemainingAmount <= 0)
+                    {
+                        <span class="pill ok">خالص</span>
+                    }
+                    else
+                    {
+                        <span class="pill warn">غير خالص</span>
+                    }
+                </div>
+            </div>
+
+            <!-- PAYMENTS -->
+            <div class="fin-card">
+                <div class="card-title">الدفعات</div>
+
+                @if (!Payments.Any())
+                {
+                    <div class="empty small">لا توجد دفعات.</div>
+                }
+                else
+                {
+                    <div class="payments-list">
+                        @foreach (var p in Payments)
+                        {
+                            var d = (p.PaidAt ?? p.CreatedAt).ToLocalTime();
+
+                            <div class="pay-item">
+                                <div class="pay-amt">@Money(p.Amount)</div>
+
+                                <div class="pay-meta">
+                                    <div class="pay-date">
+                                        <span class="pay-time">@d.ToString("HH:mm")</span>
+                                        <span class="pay-day">@d.ToString("yyyy-MM-dd")</span>
+                                    </div>
+
+                                    <div class="pay-note">
+                                        @p.PaymentMethod
+                                        @if (!string.IsNullOrWhiteSpace(p.PaymentNote))
+                                        {
+                                            <span> – @p.PaymentNote</span>
+                                        }
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(p.ReceiverName))
+                                    {
+                                        <div class="pay-recv">
+                                            استلمها: @p.ReceiverName
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Guid StudentSemesterId { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    bool IsReady;
+    StudentFinanceViewLite? Header;
+    List<PaymentLite> Payments = new();
+
+    string Money(decimal v) => $"{v:0.00} دينار";
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsReady = false;
+
+        var authState = AuthenticationStateTask != null
+            ? await AuthenticationStateTask
+            : await AuthProvider.GetAuthenticationStateAsync();
+
+        var user = authState.User;
+
+        var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(idStr, out var studentId))
+        {
+            IsReady = true;
+            return;
+        }
+
+        Header = await StudentSvc.GetStudentFinanceAsync(studentId, StudentSemesterId);
+        if (Header != null)
+            Payments = await StudentSvc.GetStudentPaymentsAsync(StudentSemesterId);
+
+        IsReady = true;
+    }
+
+    void GoBack() => Nav.NavigateTo("/Student/Home");
+}

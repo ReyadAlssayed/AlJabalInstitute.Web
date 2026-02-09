@@ -1,5 +1,8 @@
 ﻿@page "/Student/Home"
+@rendermode InteractiveServer
+
 @using Microsoft.AspNetCore.Authorization
+@inject AuthenticationStateProvider AuthProvider
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @using AlJabalInstitute.Web.Services
@@ -48,7 +51,7 @@
                         <div class="sem-strip-title">
                             @sem.SemesterName
 
-                            @if (!sem.IsResultsPublished)
+                            @if (sem.IsResultsPublished != true)
                             {
                                 <span class="sem-pub-badge">النتائج غير منشورة</span>
                             }
@@ -71,7 +74,7 @@
                             <div class="status-row">
                                 <span class="status-label">النتيجة:</span>
 
-                                @if (!sem.IsResultsPublished)
+                                @if (sem.IsResultsPublished != true)
                                 {
                                     <span class="status-pill info">غير منشورة</span>
                                 }
@@ -90,7 +93,7 @@
                                 {
                                     <span class="status-pill info">معفي</span>
                                 }
-                                else if (sem.RemainingAmount <= 0)
+                                else if (sem.RemainingAmount <= 0m)
                                 {
                                     <span class="status-pill ok">خالص</span>
                                 }
@@ -102,15 +105,16 @@
                         </div>
 
                         <div class="sem-actions">
-                            <button class="sem-btn sem-btn-fin"
+                            <button type="button" class="sem-btn sem-btn-fin"
                                     @onclick="() => GoFinance(sem.StudentSemesterId)">
                                 تفاصيل مالية
                             </button>
 
-                            <button class="sem-btn sem-btn-ac"
+                            <button type="button" class="sem-btn sem-btn-ac"
                                     @onclick="() => GoAcademic(sem.StudentSemesterId)">
                                 تفاصيل أكاديمية
                             </button>
+
                         </div>
 
                     </div>
@@ -122,7 +126,7 @@
 
 @code {
     [CascadingParameter]
-    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     string StudentName = "طالب";
     bool IsReady;
@@ -132,7 +136,10 @@
     {
         IsReady = false;
 
-        var authState = await AuthenticationStateTask;
+        var authState = AuthenticationStateTask != null
+            ? await AuthenticationStateTask
+            : await AuthProvider.GetAuthenticationStateAsync();
+
         var user = authState.User;
 
         StudentName = user.Identity?.Name ?? "طالب";
@@ -145,21 +152,20 @@
         }
 
         Semesters = await SemestersSvc.GetStudentSemestersAsync(studentId);
-
         IsReady = true;
     }
 
-    // ✅ نفس منطق الإدارة (AcademicServices)
+    // ✅ نفس منطق الإدارة (يدعم nullable)
     bool IsAcademicResultVisible(
-        bool isResultsPublished,
+        bool? isResultsPublished,
         bool isFinanciallyExempt,
         decimal remainingAmount,
         DateTime? resultUnlockedUntil)
     {
-        if (!isResultsPublished)
+        if (isResultsPublished != true)
             return false;
 
-        if (isFinanciallyExempt || remainingAmount == 0m)
+        if (isFinanciallyExempt || remainingAmount <= 0m)
             return true;
 
         if (resultUnlockedUntil != null && resultUnlockedUntil > DateTime.UtcNow)

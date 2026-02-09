@@ -10,7 +10,8 @@
     public decimal RemainingAmount { get; set; }
 
     // ✅ للأكاديمية (من view)
-    public bool IsResultsPublished { get; set; }
+    public bool? IsResultsPublished { get; set; }
+
     public DateTime? ResultUnlockedUntil { get; set; }
 
     // (اختياري) لا تستخدمه في الحكم

@@ -1,5 +1,5 @@
 ﻿/* ===============================
-   STUDENT HOME (Cards Pro)
+   STUDENT HOME (Cards – Smooth)
 ================================ */
 
 .student-home {
@@ -8,12 +8,10 @@
     background: #f8fafc;
     min-height: 100vh;
     direction: rtl;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    font-family: system-ui,-apple-system,BlinkMacSystemFont;
 }
 
-/* ===============================
-   HEADER
-================================ */
+/* ================= HEADER ================= */
 
 .student-header {
     display: flex;
@@ -30,60 +28,68 @@
     border: 1px solid #e2e8f0;
     padding: 10px 16px;
     border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 6px 18px rgba(15,23,42,.06);
 }
 
-/* ===============================
-   STATES
-================================ */
-
-.loading,
-.empty {
-    background: #ffffff;
-    border: 1px dashed #cbd5e1;
-    padding: 16px;
-    border-radius: 16px;
-    text-align: center;
-    color: #475569;
-    font-weight: 800;
-}
-
-/* ===============================
-   GRID
-================================ */
+/* ================= GRID ================= */
 
 .semesters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fill,minmax(360px,1fr));
     gap: 18px;
 }
 
-/* ===============================
-   CARD
-================================ */
+/* ================= CARD ================= */
 
 .sem-card {
     background: #fff;
     border-radius: 22px;
     overflow: hidden;
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(226,232,240,.9);
+    box-shadow: 0 10px 28px rgba(15,23,42,.06);
+    animation: fadeUp .45s ease-out both;
+    transition: transform .18s ease, box-shadow .18s ease;
+    will-change: transform;
 }
 
-/* TOP STRIP (like the sample card) */
+    .sem-card:hover {
+        transform: translateY(-2px);
+    }
+
+    /* stagger */
+    .sem-card:nth-child(1) {
+        animation-delay: .05s
+    }
+
+    .sem-card:nth-child(2) {
+        animation-delay: .10s
+    }
+
+    .sem-card:nth-child(3) {
+        animation-delay: .15s
+    }
+
+    .sem-card:nth-child(4) {
+        animation-delay: .20s
+    }
+
+    .sem-card:nth-child(5) {
+        animation-delay: .25s
+    }
+
+/* ================= TOP STRIP ================= */
+
 .sem-strip {
     position: relative;
     padding: 16px 18px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 12px;
-    color: #0f172a;
     background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(34,197,94,.10), rgba(99,102,241,.10));
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    border-bottom: 1px solid rgba(226,232,240,.9);
 }
 
-    /* thin gradient paint line */
     .sem-strip::after {
         content: "";
         position: absolute;
@@ -103,10 +109,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    white-space: nowrap;
 }
 
-/* number badge (circle) */
+/* ================= BADGES ================= */
+
 .sem-num {
     width: 34px;
     height: 34px;
@@ -115,33 +121,43 @@
     place-items: center;
     font-weight: 900;
     font-size: 14px;
-    color: #0f172a;
-    background: rgba(255,255,255,.75);
-    border: 1px solid rgba(148, 163, 184, .55);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+    background: rgba(255,255,255,.8);
+    border: 1px solid rgba(148,163,184,.55);
 }
 
-/* last badge */
 .sem-last {
     padding: 6px 12px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 900;
-    background: rgba(37, 99, 235, .12);
-    border: 1px solid rgba(37, 99, 235, .35);
+    background: rgba(37,99,235,.12);
+    border: 1px solid rgba(37,99,235,.35);
     color: #1d4ed8;
 }
 
-/* BODY */
+.sem-pub-badge {
+    margin-right: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+
+/* ================= BODY ================= */
+
 .sem-body {
     padding: 16px 18px 18px;
 }
 
-/* status area */
+/* ================= STATUS ================= */
+
 .sem-status {
     display: grid;
     gap: 10px;
-    padding: 12px 12px;
+    padding: 12px;
     border-radius: 16px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -149,9 +165,8 @@
 
 .status-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    align-items: center;
 }
 
 .status-label {
@@ -165,28 +180,28 @@
     border-radius: 999px;
     font-size: 12px;
     font-weight: 900;
-    border: 1px solid transparent;
 }
 
     .status-pill.ok {
-        background: rgba(34, 197, 94, .12);
-        border-color: rgba(34, 197, 94, .35);
+        background: rgba(34,197,94,.12);
+        border: 1px solid rgba(34,197,94,.35);
         color: #15803d;
     }
 
     .status-pill.warn {
-        background: rgba(245, 158, 11, .12);
-        border-color: rgba(245, 158, 11, .35);
+        background: rgba(245,158,11,.12);
+        border: 1px solid rgba(245,158,11,.35);
         color: #b45309;
     }
 
     .status-pill.info {
-        background: rgba(59, 130, 246, .12);
-        border-color: rgba(59, 130, 246, .35);
+        background: rgba(59,130,246,.12);
+        border: 1px solid rgba(59,130,246,.35);
         color: #1d4ed8;
     }
 
-/* ACTIONS */
+/* ================= ACTIONS ================= */
+
 .sem-actions {
     display: flex;
     gap: 12px;
@@ -205,59 +220,51 @@
 }
 
     .sem-btn:active {
-        transform: translateY(1px);
+        transform: translateY(1px)
     }
 
 .sem-btn-fin {
     background: #2563eb;
     color: #fff;
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+    box-shadow: 0 10px 20px rgba(37,99,235,.18);
 }
-
-    .sem-btn-fin:hover {
-        filter: brightness(1.03);
-    }
 
 .sem-btn-ac {
     background: #16a34a;
     color: #fff;
-    box-shadow: 0 10px 20px rgba(22, 163, 74, 0.16);
+    box-shadow: 0 10px 20px rgba(22,163,74,.16);
 }
 
-    .sem-btn-ac:hover {
-        filter: brightness(1.03);
+/* ================= ANIMATION ================= */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px)
     }
 
-.sem-pub-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-right: 10px; /* RTL */
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #475569;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
 }
 
+/* ================= MOBILE ================= */
 
-/* MOBILE */
-@media (max-width: 768px) {
+@media(max-width:768px) {
     .student-home {
         padding: 16px;
-        padding-top: 18px;
+        padding-top: 18px
     }
 
     .student-title {
         width: 100%;
         text-align: center;
-        font-size: 18px;
+        font-size: 18px
     }
 
     .semesters-grid {
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 14px
     }
 }
