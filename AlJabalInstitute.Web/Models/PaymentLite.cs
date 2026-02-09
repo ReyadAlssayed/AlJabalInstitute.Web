@@ -16,16 +16,14 @@ namespace AlJabalInstitute.Web.Models
         [Column("amount")]
         public decimal Amount { get; set; }
 
-        // Enum في قاعدة البيانات (payment_method_enum)
-        // نخليه string لسهولة القراءة في الواجهة
         [Column("payment_method")]
         public string? PaymentMethod { get; set; }
 
         [Column("paid_at")]
-        public DateTime? PaidAt { get; set; }
+        public DateTimeOffset? PaidAt { get; set; }
 
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         [Column("receiver_name")]
         public string? ReceiverName { get; set; }

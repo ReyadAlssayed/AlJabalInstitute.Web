@@ -43,6 +43,9 @@
     }
     else
     {
+        var isExempt = Header.IsFinanciallyExempt ?? false;
+        var remaining = Header.RemainingAmount ?? 0m;
+
         <div class="fin-cards">
 
             <!-- SUMMARY -->
@@ -66,19 +69,19 @@
 
                 <div class="fin-row">
                     <span class="lbl">المتبقي</span>
-                    <span class="val @(Header.IsFinanciallyExempt || Header.RemainingAmount <= 0 ? "ok" : "warn")">
-                        @(Header.IsFinanciallyExempt ? "معفي" : Money(Header.RemainingAmount))
+                    <span class="val @(isExempt || remaining <= 0 ? "ok" : "warn")">
+                        @(isExempt ? "معفي" : Money(remaining))
                     </span>
                 </div>
 
                 <div class="fin-row">
                     <span class="lbl">الحالة</span>
 
-                    @if (Header.IsFinanciallyExempt)
+                    @if (isExempt)
                     {
                         <span class="pill info">معفي</span>
                     }
-                    else if (Header.RemainingAmount <= 0)
+                    else if (remaining <= 0)
                     {
                         <span class="pill ok">خالص</span>
                     }
@@ -148,7 +151,7 @@
     StudentFinanceViewLite? Header;
     List<PaymentLite> Payments = new();
 
-    string Money(decimal v) => $"{v:0.00} دينار";
+    string Money(decimal? v) => $"{(v ?? 0m):0.00} دينار";
 
     protected override async Task OnInitializedAsync()
     {
