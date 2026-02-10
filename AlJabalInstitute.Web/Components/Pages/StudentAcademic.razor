@@ -15,73 +15,102 @@
 <div class="student-academic">
 
     <div class="acad-header">
-        <button class="back-btn" @onclick="GoBack">← رجوع</button>
-        <h2>السجل الأكاديمي</h2>
-        <div class="student-name">@Vm?.StudentName</div>
+        <div class="acad-header-top">
+            <div class="acad-kicker">تفاصيل النتيجة</div>
+
+            <h2 class="acad-title">
+                <span class="acad-sem">@((Sem?.SemesterName ?? "السمستر"))</span>
+            </h2>
+
+            <div class="student-name">@Vm?.StudentName</div>
+
+            <div class="acad-note">
+                النظام قيد التطوير، لاحقًا سيتم إضافة كشف الدرجات للمواد كاملة.
+            </div>
+        </div>
+
+        <div class="acad-header-bottom">
+            <button class="back-btn" @onclick="GoBack">← رجوع</button>
+        </div>
     </div>
 
     @if (!IsReady)
     {
         <div class="loading">جاري تحميل البيانات...</div>
     }
-    else if (Vm == null || !Vm.Semesters.Any())
+    else if (Vm == null || Sem == null)
     {
-        <div class="empty">لا توجد بيانات أكاديمية.</div>
+        <div class="empty">لا توجد بيانات أكاديمية لهذا السمستر.</div>
     }
     else
     {
-        <div class="acad-list">
-            @foreach (var s in Vm.Semesters)
-            {
-                <div class="acad-card">
+        <div class="acad-card">
 
-                    <div class="acad-card-header">
-                        <span class="sem-name">@s.SemesterName</span>
-                        <span class="sem-date">@s.StartDate.ToString("yyyy-MM")</span>
+            @if (!Sem.IsVisible)
+            {
+                <div class="acad-hidden">النتيجة محجوبة</div>
+            }
+            else
+            {
+                var pct = Sem.Percentage;
+                if (pct < 0) pct = 0;
+                if (pct > 100) pct = 100;
+
+                <div class="acad-progress">
+                    <div class="prog-top">
+                        <span class="prog-label">النسبة</span>
+                        <span class="prog-val">@($"{Sem.Percentage:0.##}%")</span>
                     </div>
 
-                    @if (!s.IsVisible)
-                    {
-                        <div class="acad-hidden">
-                            النتيجة محجوبة
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:@pct%"></div>
+                        <div class="prog-glow" style="left:calc(@pct% - 10px)"></div>
+                    </div>
+                </div>
+
+                <div class="acad-stats">
+
+                    <div class="acad-row one">
+                        <div class="stat-box wide">
+                            <div class="stat-label">عدد المواد التي درستها</div>
+                            <div class="stat-value">@Sem.TotalSubjects</div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="acad-grid">
-                            <div>
-                                <span class="lbl">عدد المواد</span>
-                                <span class="val">@s.TotalSubjects</span>
-                            </div>
+                    </div>
 
-                            <div>
-                                <span class="lbl">ناجح</span>
-                                <span class="val ok">@s.PassedSubjects</span>
-                            </div>
-
-                            <div>
-                                <span class="lbl">راسب</span>
-                                <span class="val warn">@s.FailedSubjects</span>
-                            </div>
-
-                            <div>
-                                <span class="lbl">المجموع</span>
-                                <span class="val">@s.TotalScore</span>
-                            </div>
-
-                            <div>
-                                <span class="lbl">النسبة</span>
-                                <span class="val">@($"{s.Percentage:0.##}%")</span>
-                            </div>
-
-                            <div class="final-result">
-                                <span class="lbl">النتيجة النهائية</span>
-                                <span class="val bold">@s.FinalResult</span>
-                            </div>
+                    <div class="acad-row two">
+                        <div class="stat-box">
+                            <div class="stat-label">ناجح</div>
+                            <div class="stat-value">@Sem.PassedSubjects</div>
                         </div>
-                    }
+
+                        <div class="stat-box">
+                            <div class="stat-label">راسب</div>
+                            <div class="stat-value">@Sem.FailedSubjects</div>
+                        </div>
+                    </div>
+
+                    <div class="acad-row two">
+                        <div class="stat-box">
+                            <div class="stat-label">المجموع</div>
+                            <div class="stat-value">@Sem.TotalScore</div>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="stat-label">النسبة</div>
+                            <div class="stat-value">@($"{Sem.Percentage:0.##}%")</div>
+                        </div>
+                    </div>
+
+                    <div class="acad-row one">
+                        <div class="stat-box wide final">
+                            <div class="stat-label">النتيجة النهائية</div>
+                            <div class="stat-value bold">@Sem.FinalResult</div>
+                        </div>
+                    </div>
+
                 </div>
             }
+
         </div>
     }
 </div>
@@ -94,6 +123,7 @@
 
     bool IsReady;
     StudentAcademicPageVM? Vm;
+    StudentAcademicSemesterCardVM? Sem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,6 +138,8 @@
             return;
 
         Vm = await StudentSvc.GetStudentAcademicPageAsync(studentId, StudentSemesterId);
+        Sem = Vm?.Semesters?.FirstOrDefault(x => x.StudentSemesterId == StudentSemesterId);
+
         IsReady = true;
     }
 

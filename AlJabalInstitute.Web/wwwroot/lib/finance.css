@@ -1,5 +1,5 @@
 ﻿/* ===============================
-   STUDENT FINANCE – FINAL CLEAN CSS
+   STUDENT FINANCE – FINAL CLEAN CSS (RESPONSIVE + CLEAR)
 ================================ */
 
 :root {
@@ -25,6 +25,7 @@
     direction: rtl;
     background: var(--bg);
     min-height: 100vh;
+    color: var(--text);
 }
 
 /* ================= HEADER ================= */
@@ -87,11 +88,11 @@
 /* ================= GRID ================= */
 .fin-cards {
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
 }
 
-@media (max-width:900px) {
+@media (max-width: 900px) {
     .fin-cards {
         grid-template-columns: 1fr;
     }
@@ -117,6 +118,7 @@
 .fin-row {
     display: flex;
     justify-content: space-between;
+    gap: 12px;
     padding: 10px 0;
     border-bottom: 1px solid var(--soft);
 }
@@ -148,6 +150,7 @@
     border-radius: 999px;
     font-size: 12px;
     font-weight: 950;
+    white-space: nowrap;
 }
 
     .pill.ok {
@@ -169,104 +172,94 @@
 .payments-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
-/* ✔ التنظيم النهائي */
+/* كرت دفعة واضح: (قيمة) (تفاصيل) (وقت/تاريخ) */
 .pay-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px;
+    display: grid;
+    grid-template-columns: 170px 1fr 190px;
+    gap: 12px;
+    padding: 12px;
     border: 1px solid var(--border);
     border-radius: var(--radius2);
     background: #fff;
     box-shadow: var(--shadow2);
 }
 
-/* التاريخ والوقت – أقصى اليسار */
-.pay-date {
+/* صندوق داخلي لكل جزء لزيادة الوضوح */
+.pay-box {
+    border: 1px solid #eef2f7;
+    background: #fafafa;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+/* سطر بيانات داخل الصندوق */
+.pay-line {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 130px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px dashed #e9eef5;
 }
 
-.pay-time {
-    font-weight: 950;
-    background: #f1f5f9;
-    padding: 6px 10px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-}
+    .pay-line:last-child {
+        border-bottom: none;
+    }
 
-.pay-day {
-    font-weight: 900;
-    color: #334155;
-}
-
-/* التفاصيل – يمين */
-.pay-meta {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    text-align: right;
-}
-
-.pay-note {
-    font-weight: 900;
-    color: #475569;
-}
-
-.pay-recv {
+/* عناوين صغيرة */
+.pay-label {
     font-size: 12px;
-    color: #64748b;
     font-weight: 900;
+    color: var(--muted);
+    white-space: nowrap;
 }
 
-/* المبلغ – أقصى اليمين */
-.pay-amt {
-    min-width: 140px;
-    text-align: center;
+/* قيم */
+.pay-text {
     font-weight: 950;
-    color: var(--primary);
+    color: var(--text);
+    text-align: left;
+}
+
+/* صندوق القيمة */
+.pay-amt {
     background: #eff6ff;
     border: 1px solid #dbeafe;
-    padding: 10px;
-    border-radius: 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
 }
 
-.loading {
-    display: none !important;
+.pay-value {
+    font-weight: 950;
+    color: var(--primary);
+    font-size: 16px;
 }
 
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* صندوق التفاصيل */
+.pay-meta {
+    background: #ffffff;
+    border: 1px solid #eef2f7;
 }
 
-.fin-card {
-    animation: fadeUp .45s ease-out both;
+/* صندوق الوقت والتاريخ */
+.pay-date {
+    background: #ffffff;
+    border: 1px solid #eef2f7;
 }
 
-    /* ترتيب الدخول */
-    .fin-card:nth-child(1) {
-        animation-delay: .06s;
-    }
+/* تحسين قابلية القراءة */
+.pay-text,
+.pay-value {
+    direction: rtl;
+}
 
-    .fin-card:nth-child(2) {
-        animation-delay: .12s;
-    }
-/* ===== Smooth enter (same idea as finance) ===== */
+/* ================= ANIMATIONS ================= */
 @keyframes fadeDown {
     from {
         opacity: 0;
@@ -291,18 +284,27 @@
     }
 }
 
-/* header يدخل من فوق */
+.fin-card {
+    animation: fadeUp .45s ease-out both;
+}
+
+    .fin-card:nth-child(1) {
+        animation-delay: .06s;
+    }
+
+    .fin-card:nth-child(2) {
+        animation-delay: .12s;
+    }
+
 .acad-header {
     animation: fadeDown .38s ease-out both;
 }
 
-/* القائمة تدخل من فوق لتحت */
 .acad-list {
     animation: fadeUp .45s ease-out both;
     animation-delay: .06s;
 }
 
-/* كل كرت يدخل بالتتابع */
 .acad-card {
     animation: fadeUp .45s ease-out both;
 }
@@ -331,24 +333,72 @@
         animation-delay: .38s;
     }
 
+/* ================= RESPONSIVE (TABLET) ================= */
+@media (max-width: 820px) {
+    .student-finance {
+        padding: 14px;
+    }
 
-/* ================= MOBILE ================= */
-@media (max-width:520px) {
     .pay-item {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .pay-date {
-        align-items: center;
-    }
-
-    .pay-meta {
-        align-items: center;
-        text-align: center;
+        grid-template-columns: 160px 1fr;
+        grid-template-areas:
+            "amt meta"
+            "date date";
     }
 
     .pay-amt {
-        width: 100%;
+        grid-area: amt;
+    }
+
+    .pay-meta {
+        grid-area: meta;
+    }
+
+    .pay-date {
+        grid-area: date;
+    }
+}
+
+/* ================= RESPONSIVE (MOBILE) ================= */
+@media (max-width: 520px) {
+    .student-finance {
+        padding: 12px;
+    }
+
+    .fin-title {
+        font-size: 20px;
+    }
+
+    .back-btn {
+        padding: 10px 14px;
+    }
+
+    .fin-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .pay-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .pay-box {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .pay-line {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 0;
+    }
+
+    .pay-text {
+        text-align: center;
     }
 }

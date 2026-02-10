@@ -106,32 +106,52 @@
                         @foreach (var p in Payments)
                         {
                             var d = (p.PaidAt ?? p.CreatedAt).ToLocalTime();
+                            var dt = (p.PaidAt ?? p.CreatedAt).ToLocalTime();
+                            var ampm = dt.Hour < 12 ? "صباحًا" : "مساءً";
+                            var timeTxt = dt.ToString("hh:mm") + " " + ampm;
+                            var dateTxt = dt.ToString("yyyy-MM-dd");
 
                             <div class="pay-item">
-                                <div class="pay-amt">@Money(p.Amount)</div>
+                                <div class="pay-box pay-amt">
+                                    <div class="pay-label">القيمة</div>
+                                    <div class="pay-value">@Money(p.Amount)</div>
+                                </div>
 
-                                <div class="pay-meta">
-                                    <div class="pay-date">
-                                        <span class="pay-time">@d.ToString("HH:mm")</span>
-                                        <span class="pay-day">@d.ToString("yyyy-MM-dd")</span>
+                                <div class="pay-box pay-meta">
+                                    <div class="pay-line">
+                                        <span class="pay-label">نوع الدفع</span>
+                                        <span class="pay-text">@p.PaymentMethod</span>
                                     </div>
 
-                                    <div class="pay-note">
-                                        @p.PaymentMethod
-                                        @if (!string.IsNullOrWhiteSpace(p.PaymentNote))
-                                        {
-                                            <span> – @p.PaymentNote</span>
-                                        }
-                                    </div>
+                                    @if (!string.IsNullOrWhiteSpace(p.PaymentNote))
+                                    {
+                                        <div class="pay-line">
+                                            <span class="pay-label">ملاحظة</span>
+                                            <span class="pay-text">@p.PaymentNote</span>
+                                        </div>
+                                    }
 
                                     @if (!string.IsNullOrWhiteSpace(p.ReceiverName))
                                     {
-                                        <div class="pay-recv">
-                                            استلمها: @p.ReceiverName
+                                        <div class="pay-line">
+                                            <span class="pay-label">استلمها</span>
+                                            <span class="pay-text">@p.ReceiverName</span>
                                         </div>
                                     }
                                 </div>
+
+                                <div class="pay-box pay-date">
+                                    <div class="pay-line">
+                                        <span class="pay-label">الوقت</span>
+                                        <span class="pay-text">@timeTxt</span>
+                                    </div>
+                                    <div class="pay-line">
+                                        <span class="pay-label">التاريخ</span>
+                                        <span class="pay-text">@dateTxt</span>
+                                    </div>
+                                </div>
                             </div>
+
                         }
                     </div>
                 }

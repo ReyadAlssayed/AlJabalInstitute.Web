@@ -1,36 +1,44 @@
 ﻿/* =========================
-   STUDENT ACADEMIC (Read Only)
-   NO back-btn styling here (inherits from finance)
+   STUDENT ACADEMIC (Modern UI - Updated)
+   - Progress gradient: red -> orange -> green حسب النسبة
+   - Cards on desktop: 3 columns (no huge wide boxes)
+   - Top thick border (gray) لكل مربع فقط من الأعلى
 ========================= */
 
 .student-academic {
     direction: rtl;
     padding: 18px;
-    background: #f1f5f9;
     min-height: 100vh;
+    background: radial-gradient(1200px 500px at 50% -200px, #dbeafe 0%, rgba(219,234,254,0) 60%), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
     font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
     color: #0f172a;
 }
 
-/* HEADER CONTAINER (like finance) */
+/* ================= HEADER ================= */
 .acad-header {
-    background: #ffffff;
+    background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
     border: 1px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 16px;
-    box-shadow: 0 16px 40px rgba(2, 6, 23, .08);
+    border-radius: 22px;
+    padding: 18px 16px;
+    box-shadow: 0 18px 50px rgba(2, 6, 23, .08);
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* top row: title right + back button left (button inherits styles) */
+    .acad-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,#2563eb,#60a5fa,#22d3ee);
+        opacity: .55;
+    }
+
 .acad-header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.acad-title-wrap {
-    text-align: right;
+    text-align: center;
 }
 
 .acad-kicker {
@@ -42,29 +50,46 @@
 
 .acad-title {
     margin: 0;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 1000;
     letter-spacing: .2px;
+}
+
+.acad-sem {
+    color: #2563eb;
 }
 
 .student-name {
     margin-top: 6px;
     font-size: 13px;
     color: #64748b;
-    font-weight: 800;
+    font-weight: 850;
 }
 
-/* spacing under header like finance */
-.acad-gap {
-    height: 14px;
+.acad-note {
+    margin-top: 12px;
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-weight: 900;
+    font-size: 12px;
+    text-align: center;
+    background: linear-gradient(180deg,#fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fed7aa;
+    color: #9a3412;
 }
 
-/* STATES */
+.acad-header-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+/* ================= STATES ================= */
 .loading,
 .empty {
     background: #ffffff;
     border: 1px dashed #cbd5e1;
-    border-radius: 18px;
+    border-radius: 22px;
     padding: 18px 14px;
     color: #475569;
     font-weight: 900;
@@ -72,123 +97,193 @@
     box-shadow: 0 16px 40px rgba(2, 6, 23, .06);
 }
 
-/* LIST */
-.acad-list {
-    display: grid;
-    gap: 14px;
-}
-
-/* CARD (smooth like finance cards) */
+/* ================= CARD ================= */
 .acad-card {
-    background: #ffffff;
+    background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
     border: 1px solid #e5e7eb;
-    border-radius: 18px;
+    border-radius: 22px;
     overflow: hidden;
-    box-shadow: 0 16px 40px rgba(2, 6, 23, .07);
-    transform: translateY(0);
-    transition: transform .16s ease, box-shadow .16s ease;
+    box-shadow: 0 18px 50px rgba(2, 6, 23, .08);
+    position: relative;
 }
 
-    .acad-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 22px 54px rgba(2, 6, 23, .10);
+    .acad-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 22px;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.6);
     }
 
-/* card header */
-.acad-card-header {
+/* hidden */
+.acad-hidden {
+    padding: 16px;
+    text-align: center;
+    font-weight: 1000;
+    color: #9a3412;
+    background: linear-gradient(180deg,#fff7ed 0%, #ffedd5 100%);
+    border-top: 1px solid #fed7aa;
+}
+
+/* ================= PROGRESS (red -> orange -> green) ================= */
+.acad-progress {
+    padding: 16px 16px 10px;
+}
+
+.prog-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 14px;
-    border-bottom: 1px solid #eef2f7;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    margin-bottom: 10px;
 }
 
-.sem-name {
-    font-weight: 1000;
-    font-size: 14px;
-}
-
-.sem-date {
+.prog-label {
     font-size: 12px;
-    font-weight: 900;
+    font-weight: 950;
     color: #64748b;
-    background: #f1f5f9;
-    border: 1px solid #e5e7eb;
-    padding: 4px 10px;
-    border-radius: 999px;
 }
 
-/* hidden result area */
-.acad-hidden {
-    padding: 14px;
-    text-align: center;
-    font-weight: 1000;
-    color: #c2410c;
-    background: #fff7ed;
-    border-top: 1px solid #ffedd5;
-}
-
-/* GRID */
-.acad-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    padding: 14px;
-}
-
-.acad-box {
-    border: 1px solid #eef2f7;
-    border-radius: 16px;
-    padding: 10px 12px;
-    background: #ffffff;
-}
-
-.lbl {
-    display: block;
-    font-size: 12px;
-    color: #64748b;
-    font-weight: 900;
-    margin-bottom: 6px;
-}
-
-.val {
-    display: block;
+.prog-val {
     font-size: 14px;
     font-weight: 1000;
     color: #0f172a;
 }
 
-    /* emphasize */
-    .val.ok {
-        color: #166534;
-    }
-
-    .val.warn {
-        color: #b91c1c;
-    }
-
-/* final result full width */
-.final-result {
-    grid-column: 1 / -1;
-    background: #f8fafc;
-    border-color: #e5e7eb;
-}
-
-/* subtle section divider (optional) */
-.acad-divider {
-    height: 1px;
+.prog-track {
+    height: 14px;
+    border-radius: 999px;
     background: #eef2f7;
-    margin: 0 14px 14px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(2,6,23,.08);
 }
 
-/* responsive */
+/* ✅ التدرج: أحمر -> برتقالي -> أخضر */
+.prog-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: #fb923c;
+    box-shadow: 0 10px 22px rgba(249,115,22,.18);
+    transition: width .55s ease;
+}
+
+/* glow عند الرأس */
+.prog-glow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(249,115,22,.45) 0%, rgba(249,115,22,0) 70%);
+    pointer-events: none;
+}
+
+/* ================= STATS (Desktop: all in one row style) ================= */
+.acad-stats {
+    padding: 12px 16px 18px;
+    display: grid;
+    gap: 12px;
+}
+
+/* افتراضي (كمبيوتر): 3 أعمدة (مافيش مربع ضخم) */
+@media (min-width: 900px) {
+    .acad-stats {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+}
+
+/* تابلت: عمودين */
+@media (min-width: 521px) and (max-width: 899px) {
+    .acad-stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+}
+
+/* هاتف: عمود واحد */
 @media (max-width: 520px) {
-    .acad-grid {
-        grid-template-columns: 1fr;
+    .student-academic {
+        padding: 12px;
     }
 
     .acad-title {
-        font-size: 18px;
+        font-size: 19px;
     }
+
+    .acad-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .acad-progress {
+        padding: 14px 14px 8px;
+    }
+}
+
+/* إلغاء تقسيم الصفوف القديمة، نخليها تمر كحاويات فقط */
+.acad-row.one,
+.acad-row.two {
+    display: contents;
+}
+
+/* ================= STAT BOX ================= */
+.stat-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 14px 34px rgba(2,6,23,.07);
+    position: relative;
+    overflow: hidden;
+    text-align: center; /* ← هذا المهم */
+}
+
+
+    .stat-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: #a5abb3; /* برتقالي خفيف */
+    }
+
+    /* wide / final ماعادش يكبّر العرض، فقط لمسة خفيفة */
+    .stat-box.wide {
+        background: #ffffff;
+    }
+
+.stat-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 950;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 1000;
+    color: #0f172a;
+    text-align: center;
+}
+
+
+/* final result */
+.stat-box.final {
+    text-align: center;
+    background: #ffffff;
+}
+
+    .stat-box.final .stat-value {
+        color: #2563eb;
+        font-size: 20px;
+    }
+
+.stat-value.bold {
+    font-weight: 1100;
 }
