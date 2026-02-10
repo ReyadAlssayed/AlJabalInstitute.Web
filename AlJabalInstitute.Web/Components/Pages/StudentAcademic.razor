@@ -72,6 +72,7 @@
 
                     <div class="acad-row one">
                         <div class="stat-box wide">
+                            <span class="material-symbols-outlined stat-icon">menu_book</span>
                             <div class="stat-label">عدد المواد التي درستها</div>
                             <div class="stat-value">@Sem.TotalSubjects</div>
                         </div>
@@ -79,11 +80,13 @@
 
                     <div class="acad-row two">
                         <div class="stat-box">
+                            <span class="material-symbols-outlined stat-icon">check_circle</span>
                             <div class="stat-label">ناجح</div>
                             <div class="stat-value">@Sem.PassedSubjects</div>
                         </div>
 
                         <div class="stat-box">
+                            <span class="material-symbols-outlined stat-icon">cancel</span>
                             <div class="stat-label">راسب</div>
                             <div class="stat-value">@Sem.FailedSubjects</div>
                         </div>
@@ -91,11 +94,13 @@
 
                     <div class="acad-row two">
                         <div class="stat-box">
+                            <span class="material-symbols-outlined stat-icon">calculate</span>
                             <div class="stat-label">المجموع</div>
                             <div class="stat-value">@Sem.TotalScore</div>
                         </div>
 
                         <div class="stat-box">
+                            <span class="material-symbols-outlined stat-icon">percent</span>
                             <div class="stat-label">النسبة</div>
                             <div class="stat-value">@($"{Sem.Percentage:0.##}%")</div>
                         </div>
@@ -103,12 +108,14 @@
 
                     <div class="acad-row one">
                         <div class="stat-box wide final">
+                            <span class="material-symbols-outlined stat-icon">emoji_events</span>
                             <div class="stat-label">النتيجة النهائية</div>
                             <div class="stat-value bold">@Sem.FinalResult</div>
                         </div>
                     </div>
 
                 </div>
+
             }
 
         </div>

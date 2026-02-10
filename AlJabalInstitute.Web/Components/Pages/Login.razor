@@ -57,18 +57,67 @@
                     @(IsSubmitting ? "جاري تسجيل الدخول..." : "تسجيل الدخول")
                 </button>
 
+                <!-- ✅ زر الإرشادات -->
+                <button type="button"
+                        class="help-btn"
+                        disabled="@IsSubmitting"
+                        @onclick="OpenHelp">
+                    إرشادات عامة للنظام
+                </button>
+
             </div>
         </div>
     </div>
 
 </div>
 
+<!-- ✅ مودال الإرشادات -->
+@if (IsHelpOpen)
+{
+    <div class="modal-backdrop" @onclick="CloseHelp">
+        <div class="modal-card" @onclick:stopPropagation="true" role="dialog" aria-modal="true">
+            <div class="modal-top">
+                <div class="modal-title">إرشادات عامة</div>
+            </div>
+
+            <div class="modal-body">
+                <ol class="help-list">
+                    <li>
+                        لتسجيل الدخول للنظام لابد من كتابة <b>الرقم الوطني</b> الخاص بالطالب (مكون من <b>12 رقم</b>).
+                        <br />
+                        <b>وكلمة السر</b> الخاصة بالطالب تُمنح له من <b>الإدارة</b> وتبقى ثابتة طوال فترته الدراسية ويسجّل بها دائمًا.
+                    </li>
+
+                    <li>
+                        داخل الواجهات تُعرض السمسترات التي درس بها الطالب مرقمة،
+                        مع عرض <b>آخر سمستر</b> بشكل واضح <b>أعلى الواجهة</b>.
+                    </li>
+
+                    <li>
+                        في بطاقة كل سمستر يوجد زرين:
+                        <b>تفاصيل المالية</b> و<b>تفاصيل النتيجة</b>
+                        
+                        عند النقر عليها تُفتح تفاصيلها الخاصة بالطالب.
+                    </li>
+                </ol>
+            </div>
+
+
+            <div class="modal-actions">
+                <button type="button" class="modal-close" @onclick="CloseHelp">إغلاق</button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     string NationalId = "";
     string Password = "";
 
     bool ShowPassword = false;
-    bool IsSubmitting = false; // ✅ مفتاح القفل
+    bool IsSubmitting = false;
+
+    bool IsHelpOpen = false;
 
     string PasswordInputType => ShowPassword ? "text" : "password";
     string PasswordToggleText => ShowPassword ? "إخفاء" : "إظهار";
@@ -79,14 +128,21 @@
         ShowPassword = !ShowPassword;
     }
 
+    void OpenHelp()
+    {
+        if (IsSubmitting) return;
+        IsHelpOpen = true;
+    }
+
+    void CloseHelp() => IsHelpOpen = false;
+
     async Task DoLogin()
     {
         if (IsSubmitting)
-            return; // ⛔ منع أي ضغط إضافي
+            return;
 
         IsSubmitting = true;
 
-        // ✅ الرقم الوطني = 12 رقم
         if (NationalId.Length != 12 || !NationalId.All(char.IsDigit))
         {
             ToastSvc.Error("الرقم الوطني يجب أن يكون 12 رقمًا");
@@ -94,7 +150,6 @@
             return;
         }
 
-        // ✅ كلمة السر ≤ 10
         if (Password.Length == 0 || Password.Length > 10)
         {
             ToastSvc.Error("كلمة السر يجب ألا تتجاوز 10 أحرف");
@@ -118,7 +173,7 @@
                         : r.text
                 );
 
-                IsSubmitting = false; // 🔁 فشل → افتح الزر
+                IsSubmitting = false;
                 return;
             }
 

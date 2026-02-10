@@ -19,10 +19,14 @@
 
         <div class="fin-header-top">
             <div class="fin-kicker">صفحة المالية</div>
+
             <h2 class="fin-title">
                 <span class="fin-sem">@((Header?.SemesterName ?? "السمستر"))</span>
             </h2>
+
+            <div class="student-name">@StudentName</div>
         </div>
+
 
         <div class="fin-header-bottom">
             <button type="button" class="back-btn" @onclick="GoBack">
@@ -105,7 +109,7 @@
                     <div class="payments-list">
                         @foreach (var p in Payments)
                         {
-                            var d = (p.PaidAt ?? p.CreatedAt).ToLocalTime();
+                            
                             var dt = (p.PaidAt ?? p.CreatedAt).ToLocalTime();
                             var ampm = dt.Hour < 12 ? "صباحًا" : "مساءً";
                             var timeTxt = dt.ToString("hh:mm") + " " + ampm;
@@ -168,6 +172,8 @@
     private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     bool IsReady;
+    string StudentName = "";
+
     StudentFinanceViewLite? Header;
     List<PaymentLite> Payments = new();
 
@@ -184,6 +190,7 @@
         var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(idStr, out var studentId))
             return;
+        StudentName = user.Identity?.Name ?? "";
 
         var headerTask = StudentSvc.GetStudentFinanceAsync(studentId, StudentSemesterId);
         var paymentsTask = StudentSvc.GetStudentPaymentsAsync(StudentSemesterId);
