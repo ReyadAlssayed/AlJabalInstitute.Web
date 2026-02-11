@@ -108,23 +108,46 @@ input::-webkit-credentials-auto-fill-button {
     }
 
 .modal-body {
-    padding: 16px 18px 18px;
+    padding: 18px 20px 20px;
     direction: rtl;
     text-align: right;
 }
 
 .help-list {
     margin: 0;
-    padding: 0 20px 0 0;
-    color: #1f2937;
-    font-weight: 900;
-    line-height: 2;
-    font-size: 13.5px;
+    padding: 0 22px 0 0;
+    color: #111827; /* أسود مريح */
+    font-weight: 500; /* غير غامق */
+    line-height: 2.3; /* مريح للعين */
+    font-size: 14.5px;
+    letter-spacing: .4px; /* توسعة خفيفة */
 }
 
     .help-list li {
-        margin: 10px 0;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin: 14px 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,.04);
     }
+
+.modal-card::before {
+    content: "● ● ●";
+    display: block;
+    text-align: right;
+    padding: 12px 18px 4px;
+    font-size: 14px; /* أكبر */
+    letter-spacing: 8px; /* أوضح */
+    color: #2563eb; /* أزرق واضح */
+}
+
+/* شريط أزرق غليظ يسار كل عنصر */
+.help-list li {
+    border-left: 6px solid #3b82f6; /* أزرق هادئ */
+    padding-left: 14px; /* مسافة داخلية */
+}
+
+
 
 
 .modal-actions{
