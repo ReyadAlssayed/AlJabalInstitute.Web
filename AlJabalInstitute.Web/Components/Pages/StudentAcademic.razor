@@ -142,13 +142,17 @@
         var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (!Guid.TryParse(idStr, out var studentId))
+        {
+            IsReady = true;
             return;
+        }
 
         Vm = await StudentSvc.GetStudentAcademicPageAsync(studentId, StudentSemesterId);
         Sem = Vm?.Semesters?.FirstOrDefault(x => x.StudentSemesterId == StudentSemesterId);
 
         IsReady = true;
     }
+
 
     void GoBack() => Nav.NavigateTo("/Student/Home");
 }
