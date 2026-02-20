@@ -1,5 +1,6 @@
 ﻿/* ===============================
    STUDENT HOME (Cards – Smooth)
+   + HERO HEADER (Name + NationalId)
 ================================ */
 
 .student-home {
@@ -11,23 +12,45 @@
     font-family: system-ui,-apple-system,BlinkMacSystemFont;
 }
 
-/* ================= HEADER ================= */
+/* ================= HERO HEADER ================= */
 
-.student-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 22px;
+.student-hero {
+    border-radius: 22px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(15,23,42,.08);
+    margin-bottom: 18px;
 }
 
-.student-title {
-    font-size: 20px;
+.student-hero-top {
+    padding: 18px 18px 20px;
+    background: linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
+    color: #fff;
+    text-align: right;
+}
+
+.student-hero-name {
+    font-size: 18px;
+    font-weight: 1000;
+    line-height: 1.2;
+}
+
+.student-hero-nid {
+    margin-top: 6px;
+    font-size: 13px;
     font-weight: 900;
-    color: #0f172a;
+    color: #dbeafe;
+}
+
+/* ================= STATES ================= */
+
+.loading, .empty {
     background: #fff;
     border: 1px solid #e2e8f0;
-    padding: 10px 16px;
+    padding: 14px 16px;
     border-radius: 16px;
+    font-weight: 900;
+    color: #334155;
     box-shadow: 0 6px 18px rgba(15,23,42,.06);
 }
 
@@ -86,8 +109,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    background: linear-gradient( 135deg, rgba(59,130,246,.12), rgba(34,197,94,.10), rgba(99,102,241,.10) );
-    /* ✅ border خفيف للفصل */
+    background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(34,197,94,.10), rgba(99,102,241,.10));
     border: 1px solid #e2e8f0;
     border-bottom: 1px solid rgba(226,232,240,.9);
 }
@@ -105,6 +127,10 @@
     font-size: 17px;
     font-weight: 900;
     color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .sem-badges {
@@ -123,8 +149,9 @@
     place-items: center;
     font-weight: 900;
     font-size: 14px;
-    background: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.85);
     border: 1px solid rgba(148,163,184,.55);
+    color: #0f172a;
 }
 
 .sem-last {
@@ -138,11 +165,10 @@
 }
 
 .sem-pub-badge {
-    margin-right: 10px;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 900;
     color: #475569;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
@@ -178,29 +204,28 @@
 }
 
 .status-pill {
-    padding: 0; /* إزالة المسافة */
-    border: none; /* إزالة الإطار */
-    background: transparent; /* إزالة الخلفية */
+    padding: 0;
+    border: none;
+    background: transparent;
     border-radius: 0;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 900;
 }
 
     /* خالص */
     .status-pill.ok {
-        color: #16a34a; /* أخضر */
+        color: #16a34a;
     }
 
     /* غير خالص */
     .status-pill.warn {
-        color: #f59e0b; /* برتقالي */
+        color: #f59e0b;
     }
 
-    /* مرئية */
+    /* مرئية / غير منشورة */
     .status-pill.info {
-        color: #2563eb; /* أزرق */
+        color: #2563eb;
     }
-
 
 /* ================= ACTIONS ================= */
 
@@ -256,17 +281,19 @@
 @media(max-width:768px) {
     .student-home {
         padding: 16px;
-        padding-top: 18px
-    }
-
-    .student-title {
-        width: 100%;
-        text-align: center;
-        font-size: 18px
+        padding-top: 18px;
     }
 
     .semesters-grid {
         grid-template-columns: 1fr;
-        gap: 14px
+        gap: 14px;
+    }
+
+    .student-hero {
+        border-radius: 18px;
+    }
+
+    .student-hero-name {
+        font-size: 17px;
     }
 }

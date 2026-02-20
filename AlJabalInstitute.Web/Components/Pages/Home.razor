@@ -14,8 +14,12 @@
 
 <div class="student-home">
 
-    <div class="student-header">
-        <h2 class="student-title">@StudentName</h2>
+    <!-- ✅ HEADER: اسم الطالب + الرقم الوطني فقط -->
+    <div class="student-hero">
+        <div class="student-hero-top">
+            <div class="student-hero-name">@StudentName</div>
+            <div class="student-hero-nid">رقم وطني: @NationalId</div>
+        </div>
     </div>
 
     @if (!IsReady)
@@ -114,7 +118,6 @@
                                     @onclick="() => GoAcademic(sem.StudentSemesterId)">
                                 تفاصيل النتيجة
                             </button>
-
                         </div>
 
                     </div>
@@ -129,6 +132,7 @@
     private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     string StudentName = "طالب";
+    string NationalId = "—";
     bool IsReady;
     List<StudentSemesterCard> Semesters = new();
 
@@ -151,10 +155,12 @@
             return;
         }
 
+        // ✅ هنا بالضبط: اجلب الرقم الوطني من جدول students
+        NationalId = await SemestersSvc.GetStudentNationalIdAsync(studentId) ?? "—";
+
         Semesters = await SemestersSvc.GetStudentSemestersAsync(studentId);
         IsReady = true;
     }
-
     // ✅ نفس منطق الإدارة (يدعم nullable)
     bool IsAcademicResultVisible(
         bool? isResultsPublished,

@@ -1,291 +1,267 @@
-﻿﻿ /* =========================
-   STUDENT ACADEMIC (Clean Modern)
-   - Back button: أعلى اليسار (حتى مع RTL)
-   - Progress: برتقالي ثابت
-   - Stat boxes: تدرج رمادي/أبيض لامع داخل كل مربع
-========================= */
+﻿/* =========================================
+   AL-JABAL INSTITUTE - FINAL BLUE EDITION
+   - Progress Bar Fill Fix ✅
+   - Royal Blue Theme ✅
+   - Optimized Spacing ✅
+   ========================================= */
+
+:root {
+    --primary-blue: #2563eb;
+    --dark-blue: #1d4ed8;
+    --accent-blue: #3b82f6;
+    --soft-blue: #eff6ff;
+    --bg-page: #f8fafc;
+    --white: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
 .student-academic {
     direction: rtl;
-    padding: 18px;
+    background: var(--bg-page);
+    padding: 20px;
     min-height: 100vh;
-    background: radial-gradient(1200px 500px at 50% -200px, #dbeafe 0%, rgba(219,234,254,0) 60%), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
-    color: #0f172a;
-}
-
-/* ================= HEADER ================= */
-.acad-header {
-    background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
-    border: 1px solid #e5e7eb;
-    border-radius: 22px;
-    padding: 18px 16px;
-    box-shadow: 0 18px 50px rgba(2, 6, 23, .08);
-    margin-bottom: 14px;
-    position: relative;
-    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-    /* top thin strip */
-    .acad-header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient( 90deg, rgba(59,130,246,.85), rgba(34,197,94,.75), rgba(99,102,241,.75) );
-        opacity: .55;
-    }
-
-.acad-header-top {
+/* ================= HEADER AREA ================= */
+.acad-header {
+    width: 100%;
+    max-width: 900px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+    border-radius: 28px;
+    padding: 45px 25px; /* زيادة التباعد الداخلي */
+    color: var(--white);
+    position: relative;
+    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
+    margin-bottom: 25px;
     text-align: center;
-}
-
-.acad-kicker {
-    font-size: 12px;
-    font-weight: 900;
-    color: #64748b;
-    margin-bottom: 6px;
 }
 
 .acad-title {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 1000;
-    letter-spacing: .2px;
-}
-
-.acad-sem {
-    color: #2563eb;
+    font-size: clamp(24px, 5vw, 34px);
+    font-weight: 900;
+    margin: 15px 0;
 }
 
 .student-name {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #64748b;
-    font-weight: 850;
+    margin-top: 20px; /* مسافة بين العنوان والاسم */
+    background: rgba(255, 255, 255, 0.15);
+    display: inline-flex;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.acad-note {
-    margin-top: 12px;
-    border-radius: 16px;
-    padding: 10px 14px;
-    font-weight: 900;
-    font-size: 12px;
-    text-align: center;
-    background: linear-gradient(180deg,#fff7ed 0%, #ffedd5 100%);
-    border: 1px solid #fed7aa;
-    color: #9a3412;
-}
-
-/* ✅ زر الرجوع أعلى اليسار (مع RTL) */
+/* زر الرجوع في الهيدر */
 .acad-header-bottom {
-    order: -1;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: flex-end; /* RTL: flex-end = يسار */
+    position: absolute;
+    top: 25px;
+    left: 25px;
 }
 
-/* ================= STATES ================= */
-.loading,
-.empty {
-    background: #ffffff;
-    border: 1px dashed #cbd5e1;
-    border-radius: 22px;
-    padding: 18px 14px;
-    color: #475569;
-    font-weight: 900;
-    text-align: center;
-    box-shadow: 0 16px 40px rgba(2, 6, 23, .06);
+.back-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* ================= CARD ================= */
-.acad-card {
-    background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
-    border: 1px solid #e5e7eb;
-    border-radius: 22px;
-    overflow: hidden;
-    box-shadow: 0 18px 50px rgba(2, 6, 23, .08);
-    position: relative;
-}
-
-    .acad-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: 22px;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,.6);
+    .back-btn:hover {
+        background: white;
+        color: var(--primary-blue);
     }
 
-.acad-hidden {
-    padding: 16px;
+/* ================= WARNING NOTE ================= */
+.acad-note {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border: 1px solid #fef3c7;
+    border-right: 6px solid #f59e0b;
+    padding: 22px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #92400e;
+    font-weight: 600;
+    margin-top: 55px; /* المسافة الموسعة المطلوبة */
+    margin-bottom: 30px;
     text-align: center;
-    font-weight: 1000;
-    color: #9a3412;
-    background: linear-gradient(180deg,#fff7ed 0%, #ffedd5 100%);
-    border-top: 1px solid #fed7aa;
+    line-height: 1.6;
 }
 
-/* ================= PROGRESS ================= */
+/* ================= PROGRESS BAR (تلوين الشريط) ================= */
 .acad-progress {
-    padding: 16px 16px 10px;
+    margin: 35px 0;
+    width: 100%;
 }
 
 .prog-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-weight: 800;
 }
 
 .prog-label {
-    font-size: 12px;
-    font-weight: 950;
-    color: #64748b;
+    color: var(--text-muted);
+    font-size: 16px;
 }
 
 .prog-val {
-    font-size: 14px;
-    font-weight: 1000;
-    color: #0f172a;
+    color: var(--primary-blue);
+    font-size: 18px;
 }
 
 .prog-track {
-    height: 14px;
-    border-radius: 999px;
-    background: #eef2f7;
-    border: 1px solid #e5e7eb;
+    height: 16px; /* جعل الشريط أوضح قليلاً */
+    background: #e2e8f0; /* لون المسار الخلفي (رمادي فاتح) */
+    border-radius: 50px;
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 2px 8px rgba(2,6,23,.08);
+    border: 1px solid #cbd5e1;
 }
 
+/* هذا هو الجزء المسؤول عن التلوين الداخلي */
 .prog-fill {
     height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    background: #fb923c; /* برتقالي ثابت */
-    box-shadow: 0 10px 22px rgba(249,115,22,.18);
-    transition: width .55s ease;
+    background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+    border-radius: 50px;
+    transition: width 1s ease-in-out;
+    display: block !important; /* التأكد من ظهوره */
+}
+
+/* ================= STATS BOXES ================= */
+.acad-card {
+    width: 100%;
+    max-width: 900px;
+    background: var(--white);
+    border-radius: 32px;
+    padding: 35px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    border: 1px solid #edf2f7;
+}
+
+.acad-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* مسافة عمودية أكبر بين الصفوف */
+}
+
+.acad-row {
+    display: grid;
+    gap: 25px; /* مسافة بين المربعات */
+}
+
+    .acad-row.two {
+        grid-template-columns: 1fr 1fr;
+    }
+
+.stat-box {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    padding: 28px;
+    border-radius: 24px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+    .stat-box:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-blue);
+        background: white;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+    }
+
+.stat-icon {
+    font-size: 34px;
+    color: var(--primary-blue);
+    margin-bottom: 12px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 1000;
+    color: var(--text-main);
+}
+
+/* النتيجة محجوبة */
+.acad-hidden {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 45px;
+    border-radius: 24px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    border: 2px dashed #fecaca;
+}
+
+/* =========================================
+   ADDITIONS FOR RAZOR CODE COMPATIBILITY
+   ========================================= */
+
+/* تأثير التوهج عند نهاية النسبة المئوية */
+.prog-track {
+    position: relative;
+    overflow: hidden;
 }
 
 .prog-glow {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(249,115,22,.35) 0%, rgba(249,115,22,0) 70%);
-    pointer-events: none;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    background: white;
+    filter: blur(8px);
+    opacity: 0.6;
+    transition: left 1s ease-in-out;
 }
 
-/* ================= STATS GRID ================= */
-.acad-stats {
-    padding: 12px 16px 18px;
-    display: grid;
-    gap: 12px;
-}
-
-@media (min-width: 900px) {
-    .acad-stats {
-        grid-template-columns: repeat(3, minmax(0,1fr));
-    }
-}
-
-@media (min-width: 521px) and (max-width: 899px) {
-    .acad-stats {
-        grid-template-columns: repeat(2, minmax(0,1fr));
-    }
-}
-
-@media (max-width: 520px) {
-    .student-academic {
-        padding: 12px;
-    }
-
-    .acad-title {
-        font-size: 19px;
-    }
-
-    .acad-stats {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .acad-progress {
-        padding: 14px 14px 8px;
-    }
-}
-
-/* صفوفك القديمة ما تفرق */
-.acad-row.one,
-.acad-row.two {
-    display: contents;
-}
-
-/* ================= STAT BOX (Shiny Gray/White Gradient) ================= */
-.stat-box {
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 10px 12px;
-    box-shadow: 0 10px 24px rgba(2,6,23,.06);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    /* ✅ تدرج رمادي/أبيض داخل المربع */
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #ffffff 100%);
-}
-
-    /* لمعة ناعمة */
-    .stat-box::after {
-        content: "";
-        position: absolute;
-        top: -40%;
-        left: -20%;
-        width: 140%;
-        height: 120%;
-        background: linear-gradient( 120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 35%, rgba(255,255,255,0) 70% );
-        opacity: .45;
-        transform: rotate(-8deg);
-        pointer-events: none;
-    }
-
-
-/* نصوص (مش رصاصي) */
-.stat-label {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 950;
-    margin-bottom: 6px;
-}
-
-.stat-value {
-    font-size: 15px;
-    font-weight: 1000;
-    color: #0f172a;
-}
-
-.stat-icon {
-    display: block;
-    font-size: 24px;
-    margin-bottom: 6px;
-    color: #fb923c; /* لون الأيقونة */
-    font-variation-settings: 'FILL' 0, /* بدون تعبئة */
-    'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
-
-/* final result */
+/* تمييز النتيجة النهائية (ممتاز / جيد جداً) */
 .stat-box.final {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    background: var(--soft-blue);
+    border: 2px solid var(--primary-blue);
 }
 
     .stat-box.final .stat-value {
-        color: #2563eb;
-        font-size: 17px;
-        font-weight: 1100;
+        color: var(--primary-blue);
+        font-size: 28px;
+        letter-spacing: 1px;
     }
+
+/* تحسينات النصوص */
+.bold {
+    font-weight: 1000 !important;
+}
+
+.loading, .empty {
+    text-align: center;
+    padding: 50px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+/* ================= MOBILE OPTIMIZATION ================= */
+@media (max-width: 600px) {
+    .acad-row.two {
+        grid-template-columns: 1fr;
+        gap: 35px; /* زيادة المسافة العمودية بين المربعات في الهاتف */
+    }
+
+    .stat-box {
+        padding: 40px 20px;
+    }
+
+    .acad-header {
+        padding: 65px 20px 40px;
+    }
+}

@@ -235,5 +235,16 @@ namespace AlJabalInstitute.Web.Services
 
             return vm;
         }
+
+        public async Task<string?> GetStudentNationalIdAsync(Guid studentId)
+        {
+            var res = await _client
+                .From<Student>()
+                .Where(s => s.Id == studentId)
+                .Limit(1)
+                .Get();
+
+            return res.Models.FirstOrDefault()?.NationalId;
+        }
     }
 }
