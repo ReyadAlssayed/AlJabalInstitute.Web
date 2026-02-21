@@ -22,8 +22,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        options.SlidingExpiration = true;
        options.ExpireTimeSpan = TimeSpan.FromDays(7);
 
-       // ✅ نشر عملي: Production = HTTPS + SameSite=None
-       // ✅ تطوير: لا نكسر cookie على localhost
        if (builder.Environment.IsDevelopment())
        {
            options.Cookie.SameSite = SameSiteMode.Lax;
@@ -43,13 +41,12 @@ builder.Services.AddSingleton<Supabase.Client>(sp =>
     var cfg = sp.GetRequiredService<IConfiguration>();
 
     var url = cfg["Supabase:Url"]!;
-    var key = cfg["Supabase:ServiceRoleKey"]!; // ✅ هنا
+    var key = cfg["Supabase:ServiceRoleKey"]!;
 
     var client = new Supabase.Client(url, key);
     client.InitializeAsync().GetAwaiter().GetResult();
     return client;
 });
-
 
 // ===== Needed services =====
 builder.Services.AddHttpContextAccessor();
@@ -73,12 +70,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+app.MapStaticAssets(); // ✅ fingerprinting للملفات
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ✅ مهم لطلبات POST في Blazor/Minimal APIs (ونحن مستثنين login)
 app.UseAntiforgery();
 
 // ===== Login API (مستثنى من Anti-Forgery) =====
