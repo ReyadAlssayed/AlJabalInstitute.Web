@@ -146,9 +146,29 @@ input::-webkit-credentials-auto-fill-button {
     border-left: 6px solid #3b82f6; /* أزرق هادئ */
     padding-left: 14px; /* مسافة داخلية */
 }
+.student-auth-card {
+    position: relative;
+}
 
+.new-system-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #0f172a;
+    background: linear-gradient(135deg,#fde68a,#facc15,#fbbf24);
+    box-shadow: 0 8px 20px rgba(250,204,21,.35);
+    letter-spacing: .3px;
+    z-index: 10;
+}
 
-
+@keyframes glow{
+    from{ box-shadow: 0 8px 20px rgba(250,204,21,.25); }
+    to{ box-shadow: 0 12px 28px rgba(250,204,21,.55); }
+}
 
 .modal-actions{
     padding:12px 14px 14px;
@@ -386,6 +406,10 @@ input::-webkit-credentials-auto-fill-button {
         padding: 0 10px;
         font-size: 12px;
     }
+}
+
+.auth-header-content h1 {
+    margin-top: 30px; /* ✅ نزّل العنوان فقط */
 }
 
 /* شاشات صغيرة جدًا */
