@@ -66,9 +66,9 @@
 }
 
 .back-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: #ffffff; /* ✅ أبيض */
+    color: var(--primary-blue); /* ✅ الخط أزرق */
+    border: 1px solid #bfdbfe; /* ✅ Border خفيف أزرق فاتح */
     padding: 8px 18px;
     border-radius: 12px;
     font-weight: 700;
@@ -77,10 +77,12 @@
 }
 
     .back-btn:hover {
-        background: white;
-        color: var(--primary-blue);
+        background: #eff6ff; /* أزرق فاتح عند المرور */
     }
 
+    .back-btn:active {
+        transform: translateY(1px);
+    }
 /* ================= WARNING NOTE ================= */
 .acad-note {
     width: 100%;

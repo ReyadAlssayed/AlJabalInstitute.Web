@@ -85,14 +85,22 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    border: none;
+    border: 1px solid #bfdbfe; /* ✅ Border خفيف */
     border-radius: 14px;
-    background: linear-gradient(135deg,#fb923c,#f97316);
-    color: #fff;
+    background: #ffffff; /* ✅ أبيض */
+    color: #2563eb; /* ✅ أزرق */
     font-weight: 950;
     cursor: pointer;
-    box-shadow: 0 10px 22px rgba(249,115,22,.35);
+    box-shadow: 0 6px 14px rgba(2,6,23,.06);
 }
+
+    .back-btn:hover {
+        background: #f8fafc;
+    }
+
+    .back-btn:active {
+        transform: translateY(1px);
+    }
 
 /* ================= STATES ================= */
 .loading,
